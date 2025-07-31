@@ -1,0 +1,52 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Vite
+/.parcel-cache
+
+# TypeScript
+*.tsbuildinfo
+/dist
+# Environment
+.env
+.env.*.local
+.supabase/
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Testes
+coverage/
+
+# IDEs
+.idea/
+*.sw?
+*.sublime-project
+*.sublime-workspace
+*.iml
+
+# Cache
+.cache/
+*.cache
+*.tmp
+tmp/
+
+# Outros arquivos temporários
+*.bak
+*.orig
+
+# Vercel (caso use o CLI)
+.vercel/
