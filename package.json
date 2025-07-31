@@ -1,0 +1,23 @@
+{
+  "devDependencies": {
+    "@types/node": "^24.1.0",
+    "dotenv": "^17.2.1",
+    "parcel": "^2.15.4",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  },
+  "name": "foco",
+  "version": "1.0.0",
+  "description": "Sistema desenvolvido como principal atividade da disciplina de Engenharia de Software II, durante o terceiro módulo de Análise e Desenvolvimento de Sistemas no Instituto Federal de Educação, Ciência e Tecnologia do Piauí. Utiliza um agente inteligente para organizar cronogramas de estudo, lembretes e quizzes personalizados.",
+  "scripts": {
+    "dev": "parcel public/index.html",
+    "build": "parcel build public/index.html"
+  },
+  "keywords": [],
+  "author": "Matusalen C. Alves",
+  "type": "module",
+  "license": "ISC",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.53.0"
+  }
+}
