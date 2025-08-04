@@ -5,7 +5,7 @@ export interface Meta {
   descricao?: string;
   valor_esperado?: number;
   data_limite?: string;
-  atingida: boolean;
+  atingida?: boolean;
 }
 
 export interface NovaMeta {
