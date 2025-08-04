@@ -72,11 +72,11 @@ export class AuthService {
   async getCurrentUser(): Promise<AuthUser | null> {
     const { data: { user } } = await supabase.auth.getUser();
     
-    if (!user) return null;
+    if (!user || !user.email) return null;
 
     return {
       id: user.id,
-      email: user.email!,
+      email: user.email,
     };
   }
 
