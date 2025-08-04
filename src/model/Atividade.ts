@@ -16,5 +16,5 @@ export interface NovaAtividade {
   descricao?: string;
   data_inicio: string;
   data_fim?: string;
-  status?: StatusAtividade;
+  status: StatusAtividade;
 }
