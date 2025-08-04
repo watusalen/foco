@@ -93,10 +93,10 @@ export class AuthService {
    */
   onAuthStateChange(callback: (user: AuthUser | null) => void) {
     return supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.user) {
+      if (session?.user && session.user.email) {
         callback({
           id: session.user.id,
-          email: session.user.email!,
+          email: session.user.email,
         });
       } else {
         callback(null);
