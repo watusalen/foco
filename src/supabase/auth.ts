@@ -6,6 +6,14 @@ export interface AuthUser {
   email: string;
 }
 
+export interface AuthSubscription {
+  data: {
+    subscription: {
+      unsubscribe: () => void;
+    };
+  };
+}
+
 export class AuthService {
   
   /**
