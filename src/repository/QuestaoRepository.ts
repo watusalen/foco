@@ -161,7 +161,7 @@ export class QuestaoRepository extends SupabaseBaseRepository<Questao, NovaQuest
     distribuicaoRespostas: { A: number; B: number; C: number; D: number };
   }> {
     const [respostas, acertos] = await Promise.all([
-      this.supabase.from('respostas').select('resposta_usuario, correta').eq('questao_id', questaoId),
+      this.supabase.from('respostas').select('resposta_dada, correta').eq('questao_id', questaoId),
       this.supabase.from('respostas').select('*', { count: 'exact', head: true }).eq('questao_id', questaoId).eq('correta', true)
     ]);
 
@@ -173,8 +173,8 @@ export class QuestaoRepository extends SupabaseBaseRepository<Questao, NovaQuest
     // Calcular distribuição de respostas
     const distribuicaoRespostas = { A: 0, B: 0, C: 0, D: 0 };
     respostas.data?.forEach(resp => {
-      if (resp.resposta_usuario && ['A', 'B', 'C', 'D'].includes(resp.resposta_usuario)) {
-        distribuicaoRespostas[resp.resposta_usuario as 'A' | 'B' | 'C' | 'D']++;
+      if (resp.resposta_dada && ['A', 'B', 'C', 'D'].includes(resp.resposta_dada)) {
+        distribuicaoRespostas[resp.resposta_dada as 'A' | 'B' | 'C' | 'D']++;
       }
     });
 
@@ -273,7 +273,7 @@ export class QuestaoRepository extends SupabaseBaseRepository<Questao, NovaQuest
   /**
    * Buscar questões respondidas por um usuário
    */
-  async findAnsweredByUser(userId: string): Promise<Array<Questao & { resposta_usuario: any }>> {
+  async findAnsweredByUser(userId: string): Promise<Array<Questao & { resposta_dada: any }>> {
     const { data, error } = await this.supabase
       .from(this.tableName)
       .select(`
@@ -292,9 +292,9 @@ export class QuestaoRepository extends SupabaseBaseRepository<Questao, NovaQuest
 
     return data?.map(item => ({
       ...item,
-      resposta_usuario: item.respostas?.[0] || null,
+      resposta_dada: item.respostas?.[0] || null,
       respostas: undefined
-    })) as Array<Questao & { resposta_usuario: any }>;
+    })) as Array<Questao & { resposta_dada: any }>;
   }
 
   /**
