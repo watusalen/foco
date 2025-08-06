@@ -4,7 +4,7 @@ export interface Resposta {
   id: string;
   questao_id: string;
   usuario_id: string;
-  resposta_usuario: AlternativaCorreta;
+  resposta_dada: AlternativaCorreta;
   correta: boolean;
   respondido_em: string;
 }
@@ -12,6 +12,6 @@ export interface Resposta {
 export interface NovaResposta {
   questao_id: string;
   usuario_id: string;
-  resposta_usuario: AlternativaCorreta;
+  resposta_dada: AlternativaCorreta;
   correta: boolean;
 }
