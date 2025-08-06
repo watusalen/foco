@@ -95,7 +95,7 @@ export class RespostaRepository extends SupabaseBaseRepository<Resposta, NovaRes
     return this.create({
       usuario_id: userId,
       questao_id: questaoId,
-      resposta_usuario: respostaUsuario,
+      resposta_dada: respostaUsuario,
       correta
     } as NovaResposta);
   }
@@ -119,7 +119,7 @@ export class RespostaRepository extends SupabaseBaseRepository<Resposta, NovaRes
 
     const filters = { usuario_id: userId, questao_id: questaoId } as Partial<Resposta>;
     const updateData = { 
-      resposta_usuario: novaResposta, 
+      resposta_dada: novaResposta, 
       correta,
       respondido_em: new Date().toISOString()
     } as Partial<Resposta>;
@@ -278,8 +278,8 @@ export class RespostaRepository extends SupabaseBaseRepository<Resposta, NovaRes
     const distribution = { A: 0, B: 0, C: 0, D: 0, total: respostas.length };
     
     respostas.forEach(resp => {
-      if (resp.resposta_usuario && ['A', 'B', 'C', 'D'].includes(resp.resposta_usuario)) {
-        distribution[resp.resposta_usuario as 'A' | 'B' | 'C' | 'D']++;
+      if (resp.resposta_dada && ['A', 'B', 'C', 'D'].includes(resp.resposta_dada)) {
+        distribution[resp.resposta_dada as 'A' | 'B' | 'C' | 'D']++;
       }
     });
 
