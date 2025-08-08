@@ -1,3 +1,6 @@
 /**
- * Pasta llm: destinada a integração e lógica relacionada a modelos de linguagem (LLM).
+ * Integração com Google Gemini LLM
  */
+
+export { GeminiClient } from './GeminiClient';
+export * from './types';
