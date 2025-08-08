@@ -138,7 +138,7 @@ export class ProgressoRepository extends SupabaseBaseRepository<Progresso, NovoP
    */
   async getTotalHorasByUserAndDateRange(userId: string, startDate: string, endDate: string): Promise<number> {
     const progressos = await this.findByUserAndDateRange(userId, startDate, endDate);
-    return progressos.reduce((total, p) => total + p.horas_estudadas, 0);
+    return progressos.reduce((total, p) => total + (p.horas_estudadas || 0), 0);
   }
 
   /**
@@ -148,7 +148,7 @@ export class ProgressoRepository extends SupabaseBaseRepository<Progresso, NovoP
     const progressos = await this.findByUserId(userId);
     if (progressos.length === 0) return 0;
 
-    const totalHoras = progressos.reduce((total, p) => total + p.horas_estudadas, 0);
+    const totalHoras = progressos.reduce((total, p) => total + (p.horas_estudadas || 0), 0);
     return Math.round((totalHoras / progressos.length) * 100) / 100; // 2 casas decimais
   }
 
@@ -201,14 +201,14 @@ export class ProgressoRepository extends SupabaseBaseRepository<Progresso, NovoP
       this.getTopStudyDays(userId, 1)
     ]);
 
-    const totalHoras = progressos.reduce((total, p) => total + p.horas_estudadas, 0);
+    const totalHoras = progressos.reduce((total, p) => total + (p.horas_estudadas || 0), 0);
     const totalDias = progressos.length;
     const mediaHorasPorDia = totalDias > 0 ? Math.round((totalHoras / totalDias) * 100) / 100 : 0;
-    const horasUltimosDias = ultimosProgressos.reduce((total, p) => total + p.horas_estudadas, 0);
+    const horasUltimosDias = ultimosProgressos.reduce((total, p) => total + (p.horas_estudadas || 0), 0);
     
     const melhorDia = topDays.length > 0 ? {
-      data: topDays[0].data,
-      horas: topDays[0].horas_estudadas
+      data: topDays[0].data || '',
+      horas: topDays[0].horas_estudadas || 0
     } : null;
 
     return {
