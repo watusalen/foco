@@ -359,12 +359,31 @@ describe('CRUD - Tabela questoes', () => {
     });
 
     it('UPDATE validação - deve alterar resposta correta', async () => {
-      // Buscar uma questão existente
-      const { data: questoes } = await supabase
+      // Garantir que existe pelo menos uma questão no quiz
+      let { data: questoes } = await supabase
         .from('questoes')
         .select('id, correta')
         .eq('quiz_id', quizId)
         .limit(1);
+
+      // Se não há questões, criar uma
+      if (!questoes || questoes.length === 0) {
+        const { data: novaQuestao } = await supabase
+          .from('questoes')
+          .insert({
+            quiz_id: quizId,
+            enunciado: 'Questão para teste de validação',
+            alternativa_a: 'Opção A',
+            alternativa_b: 'Opção B', 
+            alternativa_c: 'Opção C',
+            alternativa_d: 'Opção D',
+            correta: 'A'
+          })
+          .select()
+          .single();
+        
+        questoes = [novaQuestao];
+      }
 
       if (questoes && questoes.length > 0) {
         const questaoId = questoes[0].id;

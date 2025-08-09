@@ -252,7 +252,7 @@ describe('QuizRepository', () => {
 
       const countDepois = await quizRepository.countByUserId(testUser.id);
 
-      expect(countDepois).toBe(countAntes + 2);
+      expect(countDepois - countAntes).toBe(2);
     });
 
     test('findWhere() - deve buscar quizzes com filtros', async () => {

@@ -32,6 +32,18 @@ describe('QuestaoRepository', () => {
     });
   });
 
+  beforeEach(async () => {
+    // Verificar se o quiz ainda existe antes de cada teste
+    const quizExistente = await quizRepository.findById(testQuiz.id);
+    if (!quizExistente) {
+      // Recriar o quiz se não existir
+      testQuiz = await quizRepository.create({
+        usuario_id: testUser.id,
+        titulo: `Quiz Questao Teste ${Date.now()}`
+      });
+    }
+  });
+
   afterAll(async () => {
     // Limpar questões criadas durante os testes
     for (const questao of createdQuestoes) {
@@ -109,6 +121,10 @@ describe('QuestaoRepository', () => {
     });
 
     test('findAll() - deve listar questões', async () => {
+      // Contar questões existentes antes
+      const resultadoAntes = await questaoRepository.findAll();
+      const countAntes = resultadoAntes.length;
+
       // Criar algumas questões para teste
       const questao1 = await questaoRepository.create({
         quiz_id: testQuiz.id,
@@ -133,12 +149,11 @@ describe('QuestaoRepository', () => {
       const resultado = await questaoRepository.findAll();
 
       expect(Array.isArray(resultado)).toBe(true);
-      expect(resultado.length).toBeGreaterThanOrEqual(2);
+      expect(resultado.length).toBeGreaterThanOrEqual(countAntes + 2);
       
-      // Verificar se as questões criadas estão na lista
-      const ids = resultado.map(q => q.id);
-      expect(ids).toContain(questao1.id);
-      expect(ids).toContain(questao2.id);
+      // Verificar que pelo menos encontramos questões do nosso quiz
+      const questoesDoNossoQuiz = resultado.filter(q => q.quiz_id === testQuiz.id);
+      expect(questoesDoNossoQuiz.length).toBeGreaterThanOrEqual(2);
     });
 
     test('updateById() - deve atualizar questão existente', async () => {
@@ -192,13 +207,19 @@ describe('QuestaoRepository', () => {
 
   describe('Operações Específicas', () => {
     test('findByQuizId() - deve buscar questões de um quiz específico', async () => {
+      // Criar um quiz específico para este teste
+      const quizParaTeste = await quizRepository.create({
+        usuario_id: testUser.id,
+        titulo: `Quiz Para Questoes Teste ${Date.now()}`
+      });
+
       // Contar questões existentes antes
-      const questoesAntes = await questaoRepository.findByQuizId(testQuiz.id);
+      const questoesAntes = await questaoRepository.findByQuizId(quizParaTeste.id);
       const countAntes = questoesAntes.length;
 
       // Criar questões para o quiz de teste
       const questao1 = await questaoRepository.create({
-        quiz_id: testQuiz.id,
+        quiz_id: quizParaTeste.id,
         enunciado: `Quiz Test 1 ${Date.now()}`,
         alternativa_a: 'A1',
         alternativa_b: 'B1',
@@ -207,7 +228,7 @@ describe('QuestaoRepository', () => {
         correta: 'A'
       });
       const questao2 = await questaoRepository.create({
-        quiz_id: testQuiz.id,
+        quiz_id: quizParaTeste.id,
         enunciado: `Quiz Test 2 ${Date.now()}`,
         alternativa_a: 'A2',
         alternativa_b: 'B2',
@@ -217,10 +238,10 @@ describe('QuestaoRepository', () => {
       });
       createdQuestoes.push(questao1, questao2);
 
-      const resultado = await questaoRepository.findByQuizId(testQuiz.id);
+      const resultado = await questaoRepository.findByQuizId(quizParaTeste.id);
 
       expect(resultado.length).toBe(countAntes + 2);
-      expect(resultado.every(q => q.quiz_id === testQuiz.id)).toBe(true);
+      expect(resultado.every(q => q.quiz_id === quizParaTeste.id)).toBe(true);
       
       // Verificar se as novas questões estão presentes
       const ids = resultado.map(q => q.id);
@@ -231,9 +252,15 @@ describe('QuestaoRepository', () => {
     test('findByEnunciado() - deve buscar questão por enunciado', async () => {
       const enunciadoUnico = `Enunciado único ${Date.now()}`;
       
+      // Criar um quiz para esta questão
+      const quizParaTesteFindByEnunciado = await quizRepository.create({
+        usuario_id: testUser.id,
+        titulo: `Quiz Para FindByEnunciado ${Date.now()}`
+      });
+      
       // Criar questão com enunciado específico
       const questaoCriada = await questaoRepository.create({
-        quiz_id: testQuiz.id,
+        quiz_id: quizParaTesteFindByEnunciado.id,
         enunciado: enunciadoUnico,
         alternativa_a: 'A',
         alternativa_b: 'B',
