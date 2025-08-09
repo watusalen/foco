@@ -48,6 +48,37 @@ describe('RespostaRepository', () => {
     });
   });
 
+  beforeEach(async () => {
+    // Verificar se as dependências ainda existem antes de cada teste
+    // Só recriar se realmente não existir
+    const userExists = await usuarioRepository.findById(testUser.id);
+    if (!userExists) {
+      testUser = await usuarioRepository.create({
+        nome: 'Usuario Resposta Teste',
+        email: `resposta.test.${Date.now()}@exemplo.com`
+      });
+    }
+    
+    // Sempre criar um quiz fresco para garantir que existe
+    testQuiz = await quizRepository.create({
+      usuario_id: testUser.id,
+      titulo: `Quiz Resposta Teste ${Date.now()}`
+    });
+    
+    const questaoExists = await questaoRepository.findById(testQuestao.id);
+    if (!questaoExists) {
+      testQuestao = await questaoRepository.create({
+        quiz_id: testQuiz.id,
+        enunciado: `Questão para testes de resposta ${Date.now()}`,
+        alternativa_a: 'Resposta A',
+        alternativa_b: 'Resposta B',
+        alternativa_c: 'Resposta C',
+        alternativa_d: 'Resposta D',
+        correta: 'B'
+      });
+    }
+  });
+
   afterAll(async () => {
     // Limpar respostas criadas durante os testes
     for (const resposta of createdRespostas) {
@@ -118,15 +149,31 @@ describe('RespostaRepository', () => {
     });
 
     test('findAll() - deve listar respostas', async () => {
+      // Criar um quiz fresco para este teste
+      const quizParaTeste = await quizRepository.create({
+        usuario_id: testUser.id,
+        titulo: `Quiz Para Respostas Teste ${Date.now()}`
+      });
+        
+      const questaoParaTeste = await questaoRepository.create({
+        quiz_id: quizParaTeste.id,
+        enunciado: `Questão para testes de resposta ${Date.now()}`,
+        alternativa_a: 'Resposta A',
+        alternativa_b: 'Resposta B',
+        alternativa_c: 'Resposta C',
+        alternativa_d: 'Resposta D',
+        correta: 'B'
+      });
+
       // Criar algumas respostas para teste
       const resposta1 = await respostaRepository.create({
-        questao_id: testQuestao.id,
+        questao_id: questaoParaTeste.id,
         usuario_id: testUser.id,
         resposta_dada: 'A',
         correta: false
       });
       const resposta2 = await respostaRepository.create({
-        questao_id: testQuestao.id,
+        questao_id: questaoParaTeste.id,
         usuario_id: testUser.id,
         resposta_dada: 'C',
         correta: false
