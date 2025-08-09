@@ -2,10 +2,11 @@
  * Testes de integração para operações CRUD do banco de dados
  */
 import { describe, it, expect, beforeAll, afterAll, beforeEach } from '@jest/globals';
-import { authService, supabase } from '../../src/config';
+import { AuthService, supabase } from '../../src/supabase';
 
 describe('Database Integration Tests', () => {
   let testUserId: string;
+  const authService = new AuthService();
 
   beforeAll(async () => {
     // Setup: fazer login antes dos testes

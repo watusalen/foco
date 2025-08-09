@@ -1,6 +1,7 @@
 {
   "devDependencies": {
     "@jest/globals": "^30.0.5",
+    "@types/babel__traverse": "^7.28.0",
     "@types/jest": "^30.0.0",
     "@types/node": "^24.1.0",
     "buffer": "^6.0.3",
