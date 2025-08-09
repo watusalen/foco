@@ -73,12 +73,18 @@ describe('AuthService', () => {
             // Fazer login primeiro
             await authService.signIn(testEmail, testPassword);
 
+            // Aguardar um pouco para o estado de auth ser atualizado
+            await new Promise(resolve => setTimeout(resolve, 100));
+
             // Verificar que está logado
             let isAuth = await authService.isAuthenticated();
             expect(isAuth).toBe(true);
 
             // Fazer logout
             await expect(authService.signOut()).resolves.not.toThrow();
+
+            // Aguardar um pouco para o logout ser processado
+            await new Promise(resolve => setTimeout(resolve, 100));
 
             // Verificar que não está mais logado
             isAuth = await authService.isAuthenticated();
