@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+/* Migrando estilos antigos */
+@layer utilities {
+    .hidden {
+        display: none !important;
+    }
+
+    .confirm-overlay {
+        @apply fixed inset-0 bg-black/50 flex items-center justify-center z-[1000];
+    }
+
+    .confirm-dialog {
+        @apply bg-white rounded-xl shadow-lg p-6 max-w-sm w-full text-center;
+    }
+
+    .confirm-message {
+        @apply text-lg font-medium text-gray-800 mb-4;
+    }
+
+    .confirm-buttons {
+        @apply flex justify-center gap-4;
+    }
+
+    .confirm-btn {
+        @apply px-4 py-2 rounded-md font-medium transition-colors duration-200;
+    }
+
+    .confirm-btn.primary {
+        @apply bg-blue-600 hover:bg-blue-700 text-white;
+    }
+
+    .confirm-btn.secondary {
+        @apply bg-gray-300 hover:bg-gray-400 text-gray-800;
+    }
+}
