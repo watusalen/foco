@@ -57,6 +57,41 @@ export class QuizRepository extends SupabaseBaseRepository<Quiz, NovoQuiz, Parti
   }
 
   /**
+   * Buscar quizzes de um usuário com suas questões e estatísticas de respostas
+   */
+  async findByUserIdWithQuestoesAndStats(userId: string): Promise<any[]> {
+    const { data, error } = await this.supabase
+      .from(this.tableName)
+      .select(`
+        *,
+        questoes (
+          id,
+          enunciado,
+          alternativa_a,
+          alternativa_b,
+          alternativa_c,
+          alternativa_d,
+          correta,
+          respostas!questoes_respostas_questao_id_fkey (
+            id,
+            usuario_id,
+            resposta_dada,
+            correta,
+            respondido_em
+          )
+        )
+      `)
+      .eq('usuario_id', userId)
+      .order('criado_em', { ascending: false });
+
+    if (error) {
+      throw new Error(`Erro ao buscar quizzes do usuário com questões e stats: ${error.message}`);
+    }
+
+    return data || [];
+  }
+
+  /**
    * Buscar quizzes de um usuário com suas questões
    */
   async findByUserIdWithQuestoes(userId: string): Promise<any[]> {

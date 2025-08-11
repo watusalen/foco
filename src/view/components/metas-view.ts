@@ -30,8 +30,16 @@ export class MetasView {
                 <header class="page-header">
                     <button id="metas-back" class="back-btn">← Voltar</button>
                     <h2>Metas de Estudo</h2>
-                    <button id="metas-add" class="add-btn">+ Nova Meta</button>
+                    <button id="metas-add" class="add-btn" disabled style="opacity: 0.6;">🚧 Em Desenvolvimento</button>
                 </header>
+                
+                <div class="development-notice">
+                    <div class="notice-icon">🚧</div>
+                    <div class="notice-content">
+                        <h3>Funcionalidade em Desenvolvimento</h3>
+                        <p>A página de Metas está sendo desenvolvida e estará disponível em breve. Por enquanto, você pode focar nos Cronogramas, Textos e Quizzes!</p>
+                    </div>
+                </div>
                 
                 <div id="metas-form" class="meta-form hidden">
                     <h3>Nova Meta</h3>
@@ -70,7 +78,7 @@ export class MetasView {
         backBtn.addEventListener('click', onBack);
         
         addBtn.addEventListener('click', () => {
-            formContainer.classList.remove('hidden');
+            alert('🚧 Esta funcionalidade está em desenvolvimento e estará disponível em breve!\n\nPor enquanto, aproveite os Cronogramas, Textos e Quizzes! 📚');
         });
         
         cancelBtn.addEventListener('click', () => {
@@ -119,43 +127,14 @@ export class MetasView {
     public updateMetasList(metas: Array<{id: string, titulo: string, descricao?: string, dataLimite?: string, atingida?: boolean}>) {
         const listEl = this.element.querySelector('#metas-list') as HTMLElement;
         
-        if (metas.length === 0) {
-            listEl.innerHTML = '<p class="empty-message">Nenhuma meta cadastrada ainda.</p>';
-            return;
-        }
-
-        const metasHtml = metas.map(meta => `
-            <div class="meta-card ${meta.atingida ? 'completed' : ''}">
-                <div class="meta-header">
-                    <h4>${meta.titulo}</h4>
-                    <div class="meta-actions">
-                        <button class="edit-btn" data-meta-id="${meta.id}">✏️</button>
-                        <button class="delete-btn" data-meta-id="${meta.id}">🗑️</button>
-                    </div>
-                </div>
-                ${meta.descricao ? `<p class="meta-description">${meta.descricao}</p>` : ''}
-                ${meta.dataLimite ? `<p class="meta-deadline">Data limite: ${new Date(meta.dataLimite).toLocaleDateString('pt-BR')}</p>` : ''}
-                <div class="meta-status ${meta.atingida ? 'completed' : 'pending'}">
-                    ${meta.atingida ? 'Concluída' : 'Pendente'}
-                </div>
+        // Mostra mensagem de desenvolvimento em vez da lista real
+        listEl.innerHTML = `
+            <div class="development-placeholder">
+                <div class="placeholder-icon">�</div>
+                <h3>Lista de Metas</h3>
+                <p>Aqui você poderá visualizar e gerenciar suas metas de estudo.</p>
+                <p><em>Funcionalidade em desenvolvimento...</em></p>
             </div>
-        `).join('');
-
-        listEl.innerHTML = metasHtml;
-
-        // Add event listeners for edit/delete buttons
-        listEl.querySelectorAll('.edit-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const metaId = (btn as HTMLElement).dataset.metaId!;
-                this.onEditMeta(metaId);
-            });
-        });
-
-        listEl.querySelectorAll('.delete-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const metaId = (btn as HTMLElement).dataset.metaId!;
-                this.onDeleteMeta(metaId);
-            });
-        });
+        `;
     }
 }

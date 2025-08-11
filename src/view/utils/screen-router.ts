@@ -8,16 +8,19 @@
  */
 export class ScreenRouter {
   private screensMap: Map<string, HTMLElement>;
+  private onBeforeNavigate?: () => void;
 
   /**
    * Cria uma instância do ScreenRouter.
    * 
    * @param screens Array de HTMLElements, cada um deve possuir um atributo `id` único.
    *                Todas as telas passadas aqui serão gerenciadas pelo router.
+   * @param onBeforeNavigate Callback opcional executado antes de cada navegação
    * @throws {Error} Se algum elemento não possuir atributo `id`.
    */
-  constructor(screens: HTMLElement[]) {
+  constructor(screens: HTMLElement[], onBeforeNavigate?: () => void) {
     this.screensMap = new Map();
+    this.onBeforeNavigate = onBeforeNavigate;
 
     for (const screenEl of screens) {
       const id = screenEl.id;
@@ -35,6 +38,11 @@ export class ScreenRouter {
    * @param screenId Id do elemento (ex: <section>) que deve ficar visível.
    */
   public show(screenId: string): void {
+    // Executa callback antes de navegar (para fechar diálogos, etc.)
+    if (this.onBeforeNavigate) {
+      this.onBeforeNavigate();
+    }
+
     for (const [id, el] of this.screensMap.entries()) {
       if (id === screenId) {
         el.classList.remove("hidden");
