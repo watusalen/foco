@@ -23,94 +23,8 @@
     <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
     
-    <style>
-        /* CSS básico para o SPA */
-        .hidden { display: none !important; }
-        
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .page-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .back-btn {
-            background: #6c757d;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
-        .btn, button {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        
-        .btn:hover, button:hover {
-            opacity: 0.9;
-        }
-        
-        .input-group {
-            margin-bottom: 15px;
-        }
-        
-        input, textarea, select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        
-        .error-msg {
-            color: #dc3545;
-            margin: 10px 0;
-        }
-        
-        .confirm-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .confirm-dialog {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            min-width: 300px;
-            text-align: center;
-        }
-    </style>
+    <!-- Estilos principais -->
+    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -119,8 +33,12 @@
     <section id="dashboard-screen" class="hidden"></section>
     <section id="metas-screen" class="hidden"></section>
     <section id="quizzes-screen" class="hidden"></section>
+    <section id="quiz-play-screen" class="hidden"></section>
     <section id="cronogramas-screen" class="hidden"></section>
+    <section id="cronograma-detail-screen" class="hidden"></section>
+    <section id="textos-screen" class="hidden"></section>
     <section id="gerador-screen" class="hidden"></section>
+    <section id="register-screen" class="hidden"></section>
     <section id="confirm-screen" class="hidden"></section>
     
     <script type="module" src="/src/index.ts"></script>
