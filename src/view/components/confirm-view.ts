@@ -17,16 +17,29 @@ export class ConfirmView {
         this.element = document.getElementById("confirm-screen")! as HTMLElement;
 
         this.element.innerHTML = `
-            <div class="confirm-overlay">
-                <div class="confirm-dialog">
-                    <div id="confirm-message" class="confirm-message"></div>
-                    <div class="confirm-buttons">
-                        <button id="confirm-yes" class="confirm-btn primary">Confirmar</button>
-                        <button id="confirm-no" class="confirm-btn secondary">Cancelar</button>
-                    </div>
-                </div>
-            </div>
-        `;
+  <div class="confirm-overlay fixed inset-0 z-[1000] bg-black/50 backdrop-blur-sm flex items-center justify-center">
+    <div class="confirm-dialog w-full max-w-sm rounded-2xl bg-white p-5 shadow-xl ring-1 ring-black/5
+                transition transform">
+      <div id="confirm-message" class="confirm-message text-base text-gray-800 mb-4">
+        Tem certeza?
+      </div>
+      <div class="confirm-buttons flex items-center justify-end gap-3">
+        <button id="confirm-no"
+          class="confirm-btn secondary inline-flex items-center rounded-md border border-gray-300 bg-white
+                 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2
+                 focus:ring-indigo-600 focus:ring-offset-2">
+          Cancelar
+        </button>
+        <button id="confirm-yes"
+          class="confirm-btn primary inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm
+                 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2
+                 focus:ring-indigo-600 focus:ring-offset-2 disabled:opacity-60">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+`;
 
         // Event listeners
         const yesBtn = this.element.querySelector('#confirm-yes') as HTMLButtonElement;

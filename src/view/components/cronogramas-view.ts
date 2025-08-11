@@ -24,27 +24,31 @@ export class CronogramasView {
         onDeleteCronograma: (id: string) => void
     ) {
         this.element = document.getElementById("cronogramas-screen")! as HTMLElement;
-        
+
         this.element.innerHTML = `
-            <div class="cronogramas-container">
-                <header class="page-header">
-                    <button id="cronogramas-back" class="back-btn">← Voltar</button>
-                    <h2>Cronogramas de Estudo</h2>
-                    <button id="cronogramas-generate" class="add-btn">🤖 Gerar com IA</button>
-                </header>
-                
-                <div class="cronogramas-info">
-                    <p class="info-text">
-                        💡 <strong>Seus cronogramas são criados pela IA!</strong><br>
-                        Clique em "Gerar com IA" para criar um cronograma personalizado baseado em seus objetivos.
-                    </p>
-                </div>
-                
-                <div id="cronogramas-list" class="cronogramas-list">
-                    <p>Carregando cronogramas...</p>
-                </div>
-            </div>
-        `;
+  <div class="px-4 py-6 max-w-4xl mx-auto">
+    <header class="flex items-center justify-between gap-4 mb-6">
+      <button id="cronogramas-back"
+        class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
+        ← Voltar
+      </button>
+      <h2 class="text-xl font-semibold text-gray-900">Cronogramas de Estudo</h2>
+      <button id="cronogramas-generate"
+        class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+        🤖 Gerar com IA
+      </button>
+    </header>
+
+    <div class="mb-6 rounded-md bg-blue-50 p-4 text-blue-800">
+      💡 <strong>Seus cronogramas são criados pela IA!</strong><br>
+      Clique em "Gerar com IA" para criar um cronograma personalizado baseado em seus objetivos.
+    </div>
+
+    <div id="cronogramas-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <p class="text-gray-600">Carregando cronogramas...</p>
+    </div>
+  </div>
+`;
 
         // Event listeners
         const backBtn = this.element.querySelector('#cronogramas-back') as HTMLButtonElement;
@@ -62,26 +66,32 @@ export class CronogramasView {
     private onDeleteCronograma: (id: string) => void;
 
     public updateCronogramasList(cronogramas: Array<{
-        id: string, 
-        titulo: string, 
-        descricao?: string, 
-        dataInicio: string, 
+        id: string,
+        titulo: string,
+        descricao?: string,
+        dataInicio: string,
         dataFim: string,
         ativo?: boolean,
         atividades?: any[]
     }>) {
         const listEl = this.element.querySelector('#cronogramas-list') as HTMLElement;
-        
+
         if (cronogramas.length === 0) {
             listEl.innerHTML = `
-                <div class="empty-state">
-                    <div class="empty-icon">🤖</div>
-                    <h3>Ainda não há cronogramas</h3>
-                    <p>Clique em "Gerar com IA" para criar seu primeiro cronograma personalizado!</p>
-                </div>
-            `;
+    <div class="col-span-full flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-300 p-6 text-center">
+      <div class="text-4xl">🤖</div>
+      <h3 class="text-lg font-medium text-gray-900">Ainda não há cronogramas</h3>
+      <p class="text-sm text-gray-600">Clique em "Gerar com IA" para criar seu primeiro cronograma personalizado!</p>
+    </div>
+  `;
             return;
         }
+
+        const badgeByStatus: Record<string, string> = {
+            futuro: 'bg-blue-100 text-blue-800',
+            ativo: 'bg-emerald-100 text-emerald-800',
+            expirado: 'bg-gray-200 text-gray-800'
+        };
 
         const cronogramasHtml = cronogramas.map(cronograma => {
             const hoje = new Date();
@@ -89,42 +99,39 @@ export class CronogramasView {
             const fim = new Date(cronograma.dataFim);
             const status = hoje < inicio ? 'futuro' : hoje > fim ? 'expirado' : 'ativo';
             const statusText = status === 'futuro' ? 'Não iniciado' : status === 'ativo' ? 'Em andamento' : 'Finalizado';
-            
             const diasRestantes = Math.ceil((fim.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
-            const diasRestantesText = status === 'ativo' ? 
-                (diasRestantes > 0 ? `${diasRestantes} dias restantes` : 'Último dia') : 
-                '';
-
+            const diasRestantesText = status === 'ativo'
+                ? (diasRestantes > 0 ? `${diasRestantes} dias restantes` : 'Último dia')
+                : '';
             const atividadesCount = cronograma.atividades ? cronograma.atividades.length : 0;
 
             return `
-                <div class="cronograma-card ${status}">
-                    <div class="cronograma-header">
-                        <h4>🤖 ${cronograma.titulo}</h4>
-                        <div class="cronograma-actions">
-                            <button class="view-btn" data-cronograma-id="${cronograma.id}" title="Ver atividades">👁️</button>
-                            <button class="delete-btn" data-cronograma-id="${cronograma.id}" title="Excluir cronograma">🗑️</button>
-                        </div>
-                    </div>
-                    ${cronograma.descricao ? `<p class="cronograma-description">${cronograma.descricao}</p>` : ''}
-                    <div class="cronograma-dates">
-                        <span class="date-info">
-                            📅 ${new Date(cronograma.dataInicio).toLocaleDateString('pt-BR')} - 
-                            ${new Date(cronograma.dataFim).toLocaleDateString('pt-BR')}
-                        </span>
-                    </div>
-                    <div class="cronograma-meta">
-                        <span class="activities-count">📋 ${atividadesCount} atividades</span>
-                    </div>
-                    <div class="cronograma-status">
-                        <span class="status-badge ${status}">${statusText}</span>
-                        ${diasRestantesText ? `<span class="days-remaining">${diasRestantesText}</span>` : ''}
-                    </div>
-                    <div class="ai-badge">
-                        <span class="ai-label">Gerado pela IA</span>
-                    </div>
-                </div>
-            `;
+    <div class="rounded-lg border border-gray-200 bg-white p-4 shadow-sm">
+      <div class="flex items-start justify-between gap-2">
+        <h4 class="text-base font-semibold text-gray-900">🤖 ${cronograma.titulo}</h4>
+        <div class="flex items-center gap-2">
+          <button class="view-btn inline-flex items-center justify-center rounded-md border border-gray-200 px-2 py-1 hover:bg-gray-50"
+            data-cronograma-id="${cronograma.id}" title="Ver atividades">👁️</button>
+          <button class="delete-btn inline-flex items-center justify-center rounded-md border border-red-200 px-2 py-1 text-red-600 hover:bg-red-50"
+            data-cronograma-id="${cronograma.id}" title="Excluir cronograma">🗑️</button>
+        </div>
+      </div>
+      ${cronograma.descricao ? `<p class="mt-1 text-sm text-gray-600">${cronograma.descricao}</p>` : ''}
+      <div class="mt-3 text-sm text-gray-700">
+        📅 ${inicio.toLocaleDateString('pt-BR')} – ${fim.toLocaleDateString('pt-BR')}
+      </div>
+      <div class="mt-2 text-sm text-gray-700">
+        📋 ${atividadesCount} atividades
+      </div>
+      <div class="mt-3 flex items-center gap-2 flex-wrap">
+        <span class="inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${badgeByStatus[status]}">${statusText}</span>
+        ${diasRestantesText ? `<span class="text-gray-600 text-xs">${diasRestantesText}</span>` : ''}
+      </div>
+      <div class="mt-3">
+        <span class="inline-flex items-center rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-700">Gerado pela IA</span>
+      </div>
+    </div>
+  `;
         }).join('');
 
         listEl.innerHTML = cronogramasHtml;
