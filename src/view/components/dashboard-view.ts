@@ -21,40 +21,44 @@ export class DashboardView {
         this.element.innerHTML = `
             <div class="dashboard-container">
                 <header class="dashboard-header">
-                    <h2>Foco - Dashboard</h2>
+                    <h2>🎯 Foco - Dashboard</h2>
                     <button id="dashboard-logout" class="logout-btn">Sair</button>
                 </header>
-                
+
                 <nav class="dashboard-nav">
                     <button class="nav-btn" data-screen="metas-screen">📋 Metas</button>
                     <button class="nav-btn" data-screen="quizzes-screen">🧠 Quizzes</button>
                     <button class="nav-btn" data-screen="cronogramas-screen">📅 Cronogramas</button>
+                    <button class="nav-btn" data-screen="textos-screen">📄 Textos</button>
                     <button class="nav-btn" data-screen="gerador-screen">🤖 Gerador</button>
                 </nav>
-                
+
                 <main class="dashboard-content">
                     <section class="stats-section">
-                        <h3>Estatísticas</h3>
+                        <h3>📊 Estatísticas</h3>
                         <div id="dashboard-stats" class="stats-grid">
                             <div class="stat-card">
-                                <span class="stat-number">0</span>
-                                <span class="stat-label">Metas Ativas</span>
+                                <div class="stat-number">0</div>
+                                <div class="stat-label">Metas Ativas</div>
                             </div>
                             <div class="stat-card">
-                                <span class="stat-number">0</span>
-                                <span class="stat-label">Horas Estudadas</span>
+                                <div class="stat-number">0</div>
+                                <div class="stat-label">Horas Estudadas</div>
                             </div>
                             <div class="stat-card">
-                                <span class="stat-number">0</span>
-                                <span class="stat-label">Quizzes Feitos</span>
+                                <div class="stat-number">0</div>
+                                <div class="stat-label">Quizzes Feitos</div>
                             </div>
                         </div>
                     </section>
-                    
+
                     <section class="recent-section">
-                        <h3>Atividade Recente</h3>
+                        <h3>📈 Atividade Recente</h3>
                         <div id="dashboard-recent" class="recent-list">
-                            <p>Carregando...</p>
+                            <div class="empty-state">
+                                <div>📚</div>
+                                <small>Nenhuma atividade recente</small>
+                            </div>
                         </div>
                     </section>
                 </main>

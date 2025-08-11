@@ -29,7 +29,7 @@ export class LoginView {
                     <div class="input-group">
                         <input id="login-senha" type="password" placeholder="Senha" required />
                     </div>
-                    <div id="login-error" class="error-msg" style="display:none"></div>
+                    <div id="login-error" class="error-msg hidden"></div>
                     <div class="button-group">
                         <button type="submit" id="login-submit">Entrar</button>
                         <button type="button" id="login-register">Registrar</button>
@@ -74,9 +74,28 @@ export class LoginView {
         errorEl.style.display = 'none';
     }
 
+    public showError(message: string) {
+        const errorEl = this.element.querySelector('#login-error') as HTMLElement;
+        errorEl.textContent = message;
+        errorEl.style.display = 'block';
+    }
+
+    public showLoading(message: string) {
+        const submitBtn = this.element.querySelector('#login-submit') as HTMLButtonElement;
+        submitBtn.disabled = true;
+        submitBtn.textContent = message;
+    }
+
+    public hideLoading() {
+        const submitBtn = this.element.querySelector('#login-submit') as HTMLButtonElement;
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Entrar';
+    }
+
     public clear() {
         const form = this.element.querySelector('#login-form') as HTMLFormElement;
         form.reset();
         this.clearError();
+        this.hideLoading();
     }
 }

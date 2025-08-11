@@ -10,12 +10,12 @@
 export class ConfirmView {
     /** Elemento principal da tela de confirmação */
     public element: HTMLElement;
-    private onConfirm: (() => void) | null = null;
-    private onCancel: (() => void) | null = null;
+    private onConfirm: (() => void | Promise<void>) | null = null;
+    private onCancel: (() => void | Promise<void>) | null = null;
 
     constructor() {
         this.element = document.getElementById("confirm-screen")! as HTMLElement;
-        
+
         this.element.innerHTML = `
             <div class="confirm-overlay">
                 <div class="confirm-dialog">
@@ -31,22 +31,50 @@ export class ConfirmView {
         // Event listeners
         const yesBtn = this.element.querySelector('#confirm-yes') as HTMLButtonElement;
         const noBtn = this.element.querySelector('#confirm-no') as HTMLButtonElement;
-        
-        yesBtn.addEventListener('click', () => {
-            this.hide();
-            if (this.onConfirm) this.onConfirm();
+
+        yesBtn.addEventListener('click', async () => {
+            if (this.onConfirm) {
+                // Mostra loading no botão
+                const originalText = yesBtn.textContent;
+                yesBtn.disabled = true;
+                yesBtn.textContent = "Processando...";
+
+                try {
+                    await this.onConfirm();
+                    this.hide();
+                } catch (error) {
+                    console.error("Erro ao executar confirmação:", error);
+                    // Restaura o botão em caso de erro
+                    yesBtn.disabled = false;
+                    yesBtn.textContent = originalText;
+                }
+            } else {
+                this.hide();
+            }
         });
-        
-        noBtn.addEventListener('click', () => {
+
+        noBtn.addEventListener('click', async () => {
             this.hide();
-            if (this.onCancel) this.onCancel();
+            if (this.onCancel) {
+                try {
+                    await this.onCancel();
+                } catch (error) {
+                    console.error("Erro ao executar cancelamento:", error);
+                }
+            }
         });
 
         // Click no overlay para cancelar
-        this.element.addEventListener('click', (e) => {
+        this.element.addEventListener('click', async (e) => {
             if (e.target === this.element) {
                 this.hide();
-                if (this.onCancel) this.onCancel();
+                if (this.onCancel) {
+                    try {
+                        await this.onCancel();
+                    } catch (error) {
+                        console.error("Erro ao executar cancelamento:", error);
+                    }
+                }
             }
         });
     }
@@ -57,13 +85,13 @@ export class ConfirmView {
      * @param onConfirm Callback chamado ao confirmar
      * @param onCancel Callback chamado ao cancelar (opcional)
      */
-    public show(message: string, onConfirm: () => void, onCancel?: () => void) {
+    public show(message: string, onConfirm: () => void | Promise<void>, onCancel?: () => void | Promise<void>) {
         const messageEl = this.element.querySelector('#confirm-message') as HTMLElement;
         messageEl.textContent = message;
-        
+
         this.onConfirm = onConfirm;
         this.onCancel = onCancel || null;
-        
+
         this.element.classList.remove('hidden');
     }
 
@@ -72,6 +100,12 @@ export class ConfirmView {
      */
     public hide() {
         this.element.classList.add('hidden');
+
+        // Reseta os botões
+        const yesBtn = this.element.querySelector('#confirm-yes') as HTMLButtonElement;
+        yesBtn.disabled = false;
+        yesBtn.textContent = "Confirmar";
+
         this.onConfirm = null;
         this.onCancel = null;
     }
