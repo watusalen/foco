@@ -4,17 +4,23 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+/demo
 
-# Vite
+# Build outputs
 /.parcel-cache
+/dist
+/build
 
 # TypeScript
 *.tsbuildinfo
-/dist
+
 # Environment
 .env
 .env.*
 .supabase/
+
+# Vercel
+.vercel
 
 # VSCode
 .vscode/

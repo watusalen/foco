@@ -1,9 +1,11 @@
-// Exporta a nova estrutura simplificada
-export * from './model';
-export * from './repository';
-export * from './crud';
-export * from './llm';
-export * from './supabase';
+/**
+ * Ponto de entrada da aplicação FOCO.
+ * 
+ * Inicializa a interface principal (`MainView`) assim que o DOM estiver carregado,
+ * conectando a camada de visualização ao restante do sistema.
+ */
+import { MainView } from "./view/main-view";
 
-console.log('🎯 FOCO - Sistema de Estudos Simplificado');
-console.log('✅ Estrutura carregada: Models, Repositories, CRUD, LLM, Supabase');
+window.addEventListener("DOMContentLoaded", () => {
+  new MainView();
+});
