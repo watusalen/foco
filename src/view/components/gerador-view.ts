@@ -30,32 +30,32 @@ export class GeradorView {
         this.element.innerHTML = `
   <div class="min-h-screen bg-gray-50">
     <div class="mx-auto max-w-4xl px-4 py-6">
-      <header class="flex items-center gap-3 mb-6">
-        <button id="gerador-back"
-          class="inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
-          ← Voltar
-        </button>
-        <h2 class="text-xl font-semibold text-gray-900">Gerador de Conteúdo</h2>
-      </header>
+      <header class="mb-6 grid grid-cols-3 items-center">
+  <button id="gerador-back"
+    class="justify-self-start inline-flex items-center gap-2 text-sm px-3 py-2 rounded-md border border-gray-300 text-gray-700 hover:bg-gray-50">
+    ← Voltar
+  </button>
+  <h2 class="text-xl font-semibold text-gray-900 text-center">Gerador de Conteúdo</h2>
+  <span></span>
+</header>
 
       <div class="space-y-6">
         <!-- Tipo -->
         <div>
           <label for="gerador-tipo" class="block text-sm font-medium text-gray-700">Tipo de conteúdo:</label>
           <select id="gerador-tipo"
-            class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500">
+            class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500">
             <option value="quiz">Questões de Quiz</option>
             <option value="texto">Texto/Resumo</option>
             <option value="cronograma">Cronograma de Estudos</option>
           </select>
         </div>
 
-        <!-- Prompt -->
         <div>
           <label for="gerador-prompt" class="block text-sm font-medium text-gray-700">Prompt/Tema:</label>
           <textarea id="gerador-prompt" rows="4"
             placeholder="Descreva o que você quer gerar..."
-            class="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
+            class="mt-1 block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
 
           <div class="mt-2 text-sm text-gray-600" id="prompt-examples">
             <small><strong>Exemplos:</strong></small>
@@ -84,7 +84,6 @@ export class GeradorView {
     </div>
   </div>
 `;
-
 
         // Event listeners
         const backBtn = this.element.querySelector('#gerador-back') as HTMLButtonElement;
