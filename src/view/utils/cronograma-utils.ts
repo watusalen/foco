@@ -39,7 +39,7 @@ export class CronogramaUtils {
   constructor(
     private cronogramaRepo: CronogramaRepository,
     private atividadeRepo: AtividadeRepository
-  ) {}
+  ) { }
 
   /**
    * Busca cronogramas de um usuário com datas calculadas
@@ -48,7 +48,7 @@ export class CronogramaUtils {
     try {
       // Busca cronogramas com suas atividades
       const cronogramasComAtividades = await this.cronogramaRepo.findByUserIdWithActivities(userId);
-      
+
       return cronogramasComAtividades.map(cronograma => this.calcularDatasCronograma(cronograma));
     } catch (error) {
       console.error('Erro ao buscar cronogramas com datas:', error);
@@ -62,7 +62,7 @@ export class CronogramaUtils {
   async buscarCronogramaComDatas(cronogramaId: string): Promise<CronogramaComDatas | null> {
     try {
       const cronogramaComAtividades = await this.cronogramaRepo.findByIdWithActivities(cronogramaId);
-      
+
       if (!cronogramaComAtividades) {
         return null;
       }
@@ -77,37 +77,38 @@ export class CronogramaUtils {
   /**
    * Calcula as datas de um cronograma baseado em suas atividades
    */
-  private calcularDatasCronograma(cronogramaComAtividades: any): CronogramaComDatas {
-    const { atividades, ...cronograma } = cronogramaComAtividades;
-    
-    // dataInicio = cronograma.criado_em
-    const dataInicio = cronograma.criado_em.split('T')[0]; // Remove horário, mantém apenas data
-    
-    // dataFim = MAX(atividade.data_fim) ou criado_em se não houver atividades
+  private calcularDatasCronograma(crono: any): CronogramaComDatas {
+    const { atividades = [], ...c } = crono;
+
+    const dataInicio = (c.criado_em as string).split('T')[0];
+
     let dataFim = dataInicio;
-    
-    if (atividades && atividades.length > 0) {
-      const datasFim = atividades.map((atividade: any) => atividade.data_fim);
-      dataFim = datasFim.reduce((max: string, current: string) => {
-        return current > max ? current : max;
-      });
+    if (atividades.length > 0) {
+      // garante string YYYY-MM-DD mais recente
+      dataFim = atividades
+        .map((a: Atividade) => a.data_fim)
+        .reduce((max: string, cur: string) => (cur > max ? cur : max));
     }
 
+    const status = CronogramaUtils.calcularStatusCronograma(dataInicio, dataFim);
+
     return {
-      id: cronograma.id,
-      titulo: cronograma.titulo,
-      descricao: cronograma.descricao,
+      id: c.id,
+      titulo: c.titulo,
+      descricao: c.descricao,
       dataInicio,
       dataFim,
-      atividades: atividades || []
+      ativo: status === 'ativo',
+      atividades
     };
   }
+
 
   /**
    * Cria um novo cronograma com atividades
    */
   async criarCronogramaComAtividades(
-    userId: string, 
+    userId: string,
     dados: DadosCronograma
   ): Promise<CronogramaComDatas> {
     try {
@@ -174,7 +175,7 @@ export class CronogramaUtils {
     try {
       // Primeiro exclui todas as atividades do cronograma
       const atividades = await this.atividadeRepo.findByCronogramaId(cronogramaId);
-      
+
       for (const atividade of atividades) {
         await this.atividadeRepo.deleteById(atividade.id);
       }
@@ -188,40 +189,33 @@ export class CronogramaUtils {
     }
   }
 
-  /**
-   * Verifica se uma data está no formato correto (YYYY-MM-DD)
-   */
   static validarFormatoData(data: string): boolean {
-    const regex = /^\d{4}-\d{2}-\d{2}$/;
-    return regex.test(data) && !isNaN(Date.parse(data));
+    return /^\d{4}-\d{2}-\d{2}$/.test(data);
   }
 
-  /**
-   * Converte data do formato ISO para formato brasileiro
-   */
-  static formatarDataBR(data: string): string {
-    return new Date(data + 'T00:00:00').toLocaleDateString('pt-BR');
+  // cria Date local no início / fim do dia para comparações estáveis
+  private static dateAtLocalStart(data: string) {
+    const [y, m, d] = data.split('-').map(Number);
+    return new Date(y, m - 1, d, 0, 0, 0, 0);
+  }
+  private static dateAtLocalEnd(data: string) {
+    const [y, m, d] = data.split('-').map(Number);
+    return new Date(y, m - 1, d, 23, 59, 59, 999);
   }
 
-  /**
-   * Calcula o status de um cronograma baseado nas datas
-   */
   static calcularStatusCronograma(dataInicio: string, dataFim: string): 'futuro' | 'ativo' | 'expirado' {
     const hoje = new Date();
-    const inicio = new Date(dataInicio + 'T00:00:00');
-    const fim = new Date(dataFim + 'T23:59:59');
-    
+    const inicio = this.dateAtLocalStart(dataInicio);
+    const fim = this.dateAtLocalEnd(dataFim);
     if (hoje < inicio) return 'futuro';
     if (hoje > fim) return 'expirado';
     return 'ativo';
   }
 
-  /**
-   * Calcula dias restantes para um cronograma
-   */
   static calcularDiasRestantes(dataFim: string): number {
     const hoje = new Date();
-    const fim = new Date(dataFim + 'T23:59:59');
-    return Math.ceil((fim.getTime() - hoje.getTime()) / (1000 * 60 * 60 * 24));
+    const fim = this.dateAtLocalEnd(dataFim);
+    return Math.ceil((fim.getTime() - hoje.getTime()) / 86400000);
   }
+
 }
