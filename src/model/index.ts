@@ -7,3 +7,5 @@ export * from './Progresso';
 export * from './Quiz';
 export * from './Questao';
 export * from './Resposta';
+export * from './Texto';
+export * from './Conversa';
