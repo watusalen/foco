@@ -26,27 +26,23 @@ export class CronogramasView {
         this.element = document.getElementById("cronogramas-screen")! as HTMLElement;
 
         this.element.innerHTML = `
-  <div class="px-4 py-6 max-w-4xl mx-auto">
-    <header class="flex items-center justify-between gap-4 mb-6">
-      <button id="cronogramas-back"
-        class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-        ← Voltar
-      </button>
-      <h2 class="text-xl font-semibold text-gray-900">Cronogramas de Estudo</h2>
-      <button id="cronogramas-generate"
-        class="inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">
-        🤖 Gerar com IA
-      </button>
-    </header>
+<header class="mb-6 grid grid-cols-[auto_1fr_auto] items-center gap-4">
+  <button id="cronogramas-back"
+    class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
+    ← Voltar
+  </button>
 
-    <div class="mb-6 rounded-md bg-blue-50 p-4 text-blue-800">
-      💡 <strong>Seus cronogramas são criados pela IA!</strong><br>
-      Clique em "Gerar com IA" para criar um cronograma personalizado baseado em seus objetivos.
-    </div>
+  <h2 class="justify-self-center text-xl font-semibold text-gray-900">
+    Cronogramas de Estudo
+  </h2>
 
-    <div id="cronogramas-list" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-      <p class="text-gray-600">Carregando cronogramas...</p>
-    </div>
+  <button id="cronogramas-generate"
+    class="justify-self-end inline-flex items-center gap-2 rounded-md bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+    🤖 Gerar com IA
+  </button>
+</header>
+
+<div id="cronogramas-list" class="grid grid-cols-1 gap-4 max-w-3xl mx-auto">
   </div>
 `;
 
