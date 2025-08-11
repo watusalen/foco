@@ -15,3 +15,5 @@ export { ProgressoRepository } from './ProgressoRepository';
 export { QuizRepository } from './QuizRepository';
 export { QuestaoRepository } from './QuestaoRepository';
 export { RespostaRepository } from './RespostaRepository';
+export { TextoRepository } from './TextoRepository';
+export { ConversaRepository } from './ConversaRepository';
