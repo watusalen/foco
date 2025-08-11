@@ -17,53 +17,58 @@ export class DashboardView {
      */
     constructor(onNavigate: (screen: string) => void, onLogout: () => void) {
         this.element = document.getElementById("dashboard-screen")! as HTMLElement;
-        
+
         this.element.innerHTML = `
-            <div class="dashboard-container">
-                <header class="dashboard-header">
-                    <h2>🎯 Foco - Dashboard</h2>
-                    <button id="dashboard-logout" class="logout-btn">Sair</button>
-                </header>
+  <div class="min-h-screen bg-gray-50">
+    <div class="mx-auto max-w-4xl px-4 py-6">
+      <header class="flex items-center justify-between gap-4 mb-6">
+        <h2 class="text-xl font-semibold text-gray-900">🎯 Foco - Dashboard</h2>
+        <button id="dashboard-logout"
+          class="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
+          Sair
+        </button>
+      </header>
 
-                <nav class="dashboard-nav">
-                    <button class="nav-btn" data-screen="metas-screen">📋 Metas</button>
-                    <button class="nav-btn" data-screen="quizzes-screen">🧠 Quizzes</button>
-                    <button class="nav-btn" data-screen="cronogramas-screen">📅 Cronogramas</button>
-                    <button class="nav-btn" data-screen="textos-screen">📄 Textos</button>
-                    <button class="nav-btn" data-screen="gerador-screen">🤖 Gerador</button>
-                </nav>
+      <nav class="mb-6 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+        <button class="nav-btn rounded-md border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50" data-screen="metas-screen">📋 Metas</button>
+        <button class="nav-btn rounded-md border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50" data-screen="quizzes-screen">🧠 Quizzes</button>
+        <button class="nav-btn rounded-md border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50" data-screen="cronogramas-screen">📅 Cronogramas</button>
+        <button class="nav-btn rounded-md border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50" data-screen="textos-screen">📄 Textos</button>
+        <button class="nav-btn rounded-md border border-gray-200 bg-white px-3 py-2 text-sm hover:bg-gray-50" data-screen="gerador-screen">🤖 Gerador</button>
+      </nav>
 
-                <main class="dashboard-content">
-                    <section class="stats-section">
-                        <h3>📊 Estatísticas</h3>
-                        <div id="dashboard-stats" class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-number">0</div>
-                                <div class="stat-label">Metas Ativas</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">0</div>
-                                <div class="stat-label">Horas Estudadas</div>
-                            </div>
-                            <div class="stat-card">
-                                <div class="stat-number">0</div>
-                                <div class="stat-label">Quizzes Feitos</div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <section class="recent-section">
-                        <h3>📈 Atividade Recente</h3>
-                        <div id="dashboard-recent" class="recent-list">
-                            <div class="empty-state">
-                                <div>📚</div>
-                                <small>Nenhuma atividade recente</small>
-                            </div>
-                        </div>
-                    </section>
-                </main>
+      <main class="space-y-8">
+        <section class="stats-section">
+          <h3 class="mb-3 text-base font-semibold text-gray-900">📊 Estatísticas</h3>
+          <div id="dashboard-stats" class="stats-grid grid gap-4 sm:grid-cols-3">
+            <div class="stat-card rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
+              <div class="stat-number text-2xl font-bold text-gray-900">0</div>
+              <div class="stat-label text-sm text-gray-600">Metas Ativas</div>
             </div>
-        `;
+            <div class="stat-card rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
+              <div class="stat-number text-2xl font-bold text-gray-900">0</div>
+              <div class="stat-label text-sm text-gray-600">Horas Estudadas</div>
+            </div>
+            <div class="stat-card rounded-lg border border-gray-200 bg-white p-4 text-center shadow-sm">
+              <div class="stat-number text-2xl font-bold text-gray-900">0</div>
+              <div class="stat-label text-sm text-gray-600">Quizzes Feitos</div>
+            </div>
+          </div>
+        </section>
+
+        <section class="recent-section">
+          <h3 class="mb-3 text-base font-semibold text-gray-900">📈 Atividade Recente</h3>
+          <div id="dashboard-recent" class="recent-list">
+            <div class="empty-state flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-gray-300 p-6 text-center">
+              <div class="text-3xl">📚</div>
+              <small class="text-sm text-gray-600">Nenhuma atividade recente</small>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+`;
 
         // Event listeners para navegação
         const navButtons = this.element.querySelectorAll('.nav-btn');

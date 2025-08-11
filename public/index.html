@@ -1,4 +1,14 @@
 <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+<!DOCTYPE html>
 <html lang="pt-BR">
 
 <head>
@@ -7,27 +17,28 @@
     <meta name="description" content="Sistema inteligente de estudos com cronogramas, quizzes e geração de conteúdo por IA">
     <meta name="keywords" content="estudos, cronograma, quiz, IA, educação, organização">
     <meta name="author" content="Matusalen C. Alves">
-    
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="Foco - Sistema de Estudos">
     <meta property="og:description" content="Sistema inteligente de estudos com cronogramas, quizzes e geração de conteúdo por IA">
-    
+
     <!-- Twitter -->
     <meta property="twitter:card" content="summary">
     <meta property="twitter:title" content="Foco - Sistema de Estudos">
     <meta property="twitter:description" content="Sistema inteligente de estudos com cronogramas, quizzes e geração de conteúdo por IA">
-    
+
     <title>Foco - Sistema de Estudos</title>
-    
+
     <!-- Favicon -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
-    
-    <!-- Estilos principais -->
-    <link rel="stylesheet" href="styles.css">
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎯</text></svg>">
+
+    <!-- Estilos principais com Tailwind -->
+    <link rel="stylesheet" href="../src/index.css">
 </head>
 
-<body>
+<body class="bg-gray-50 text-gray-900">
     <!-- SPA Screens -->
     <section id="login-screen" class="hidden"></section>
     <section id="dashboard-screen" class="hidden"></section>
@@ -40,7 +51,11 @@
     <section id="gerador-screen" class="hidden"></section>
     <section id="register-screen" class="hidden"></section>
     <section id="confirm-screen" class="hidden"></section>
-    
+
+    <script type="module" src="/src/index.ts"></script>
+</body>
+
+</html>
     <script type="module" src="/src/index.ts"></script>
 </body>
 

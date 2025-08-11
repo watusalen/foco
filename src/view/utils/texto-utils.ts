@@ -34,7 +34,7 @@ export class TextoUtils {
   constructor(
     private textoRepo: TextoRepository,
     private conversaRepo: ConversaRepository
-  ) {}
+  ) { }
 
   /**
    * Busca textos de um usuário com suas conversas
@@ -42,7 +42,7 @@ export class TextoUtils {
   async buscarTextosComConversas(userId: string): Promise<TextoComConversas[]> {
     try {
       const textosComConversas = await this.textoRepo.findByUserIdWithConversas(userId);
-      
+
       return textosComConversas.map(texto => ({
         id: texto.id,
         titulo: texto.titulo,
@@ -65,7 +65,7 @@ export class TextoUtils {
   async buscarTextoComConversas(textoId: string): Promise<TextoComConversas | null> {
     try {
       const textoComConversas = await this.textoRepo.findByIdWithConversas(textoId);
-      
+
       if (!textoComConversas) {
         return null;
       }
@@ -90,7 +90,7 @@ export class TextoUtils {
    * Cria um novo texto
    */
   async criarTexto(
-    userId: string, 
+    userId: string,
     dados: DadosTexto
   ): Promise<TextoComConversas> {
     try {
@@ -147,7 +147,7 @@ export class TextoUtils {
   async alternarSalvo(textoId: string): Promise<TextoComConversas | null> {
     try {
       const textoAtualizado = await this.textoRepo.toggleSaved(textoId);
-      
+
       if (!textoAtualizado) {
         return null;
       }
@@ -167,7 +167,7 @@ export class TextoUtils {
     try {
       // Primeiro exclui todas as conversas do texto
       const conversas = await this.conversaRepo.findByTextoId(textoId);
-      
+
       for (const conversa of conversas) {
         await this.conversaRepo.deleteById(conversa.id);
       }
@@ -187,7 +187,7 @@ export class TextoUtils {
   async buscarTextosSalvos(userId: string): Promise<TextoComConversas[]> {
     try {
       const textosSalvos = await this.textoRepo.findSavedByUserId(userId);
-      
+
       const textosComConversas = await Promise.all(
         textosSalvos.map(async (texto) => {
           const conversas = await this.conversaRepo.findByTextoId(texto.id);
@@ -215,51 +215,48 @@ export class TextoUtils {
    * Extrai título inteligentemente do prompt
    */
   static extrairTituloDoPrompt(prompt: string, tipo: 'texto' | 'resumo'): string {
-    // Remove palavras de comando comuns
-    const palavrasParaRemover = [
-      'gere', 'crie', 'faça', 'escreva', 'explique', 'resuma', 'resumo', 'texto',
-      'sobre', 'acerca', 'de', 'da', 'do', 'das', 'dos', 'um', 'uma', 'o', 'a'
-    ];
-    
-    let titulo = prompt.toLowerCase();
-    
-    // Remove palavras de comando
-    palavrasParaRemover.forEach(palavra => {
-      titulo = titulo.replace(new RegExp(`\\b${palavra}\\b`, 'g'), '');
-    });
-    
-    // Limpa espaços extras
-    titulo = titulo.replace(/\s+/g, ' ').trim();
-    
-    // Capitaliza primeira letra de cada palavra importante
-    titulo = titulo.split(' ')
-      .filter(palavra => palavra.length > 2)
-      .map(palavra => palavra.charAt(0).toUpperCase() + palavra.slice(1))
-      .join(' ');
-    
-    // Adiciona prefixo baseado no tipo
+    // remove HTML e normaliza acentos
+    const plain = prompt.replace(/<[^>]*>/g, '').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+    const stop = new Set([
+      'gere', 'crie', 'faca', 'escreva', 'explique', 'resuma', 'resumo', 'texto', 'sobre', 'acerca', 'de', 'da', 'do', 'das', 'dos', 'um', 'uma', 'o', 'a',
+      'para', 'por', 'no', 'na', 'nos', 'nas', 'em', 'e'
+    ]);
+
+    const words = plain
+      .toLowerCase()
+      .split(/[^a-z0-9]+/i)
+      .filter(w => w.length > 2 && !stop.has(w));
+
+    let titulo = words.map(w => w[0].toUpperCase() + w.slice(1)).join(' ').trim();
+    if (!titulo) titulo = 'Conteudo Gerado';
+
     const prefixo = tipo === 'resumo' ? 'Resumo: ' : 'Texto: ';
-    
-    // Limita o tamanho
-    const tituloFinal = titulo.length > 50 ? titulo.substring(0, 50) + '...' : titulo;
-    
-    return prefixo + (tituloFinal || 'Conteúdo Gerado');
+    const limite = 50;
+    if (titulo.length > limite) titulo = titulo.slice(0, limite).trim() + '...';
+
+    return prefixo + titulo;
   }
+
 
   /**
    * Simula geração de contexto para conversa
    */
   static gerarContextoConversa(textoOriginal: string, conversasAnteriores: Conversa[]): string {
-    let contexto = `Texto original: "${textoOriginal.substring(0, 200)}..."`;
-    
+    const stripHtml = (s: string) => s.replace(/<[^>]*>/g, '');
+    const cut = (s: string, n: number) => (s.length > n ? s.slice(0, n) + '...' : s);
+
+    let contexto = `Texto original: "${cut(stripHtml(textoOriginal), 300)}"`;
+
     if (conversasAnteriores.length > 0) {
+      const ultimas = conversasAnteriores.slice(-3);
       contexto += '\n\nInterações anteriores:\n';
-      conversasAnteriores.slice(-3).forEach((conversa, index) => {
-        contexto += `${index + 1}. Pergunta: "${conversa.prompt}"\n`;
-        contexto += `   Resposta: "${conversa.resposta.substring(0, 100)}..."\n`;
+      ultimas.forEach((c, i) => {
+        contexto += `${i + 1}. Pergunta: "${cut(stripHtml(c.prompt), 160)}"\n`;
+        contexto += `   Resposta: "${cut(stripHtml(c.resposta), 220)}"\n`;
       });
     }
-    
     return contexto;
   }
+
 }

@@ -1,16 +1,7 @@
 /**
  * RegisterView
  * 
- * Responsável                         <input id="register-senha" type="password" placeholder="Crie uma senha (mínimo 6 caracteres)" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="register-senha-confirma">Confirmar Senha</label>
-                        <input id="register-senha-confirma" type="password" placeholder="Confirme sua senha" required />
-                    </div>
-                    <div id="register-error" class="error-msg hidden"></div>
-                    <div class="button-group" style="display: flex; flex-direction: column; gap: 1rem; margin-top: 2rem;">
-                        <button type="submit" id="register-submit" class="btn">Criar Conta</button>
-                        <button type="button" id="register-voltar" class="btn" style="background: linear-gradient(135deg, var(--gray-500), var(--gray-600));">Voltar ao Login</button>r a tela de registro/cadastro.
+ * Responsável pela tela de registro/cadastro.
  * Permite ao usuário criar uma nova conta com validação
  * e feedback visual adequado.
  * 
@@ -26,42 +17,65 @@ export class RegisterView {
      * @param onBackToLogin Função chamada ao voltar para login
      */
     constructor(
-        onRegister: (nome: string, email: string, senha: string) => void, 
+        onRegister: (nome: string, email: string, senha: string) => void,
         onBackToLogin: () => void
     ) {
         this.element = document.getElementById("register-screen")! as HTMLElement;
-        
+
         this.element.innerHTML = `
-            <div class="screen-container">
-                <div class="text-center">
-                    <h1 class="font-bold text-primary" style="margin-bottom: 1rem; font-size: 2.5rem;">🎯 Foco</h1>
-                    <h2 style="margin-bottom: 2rem; color: var(--gray-700); font-weight: 600;">Criar Nova Conta</h2>
-                    <p style="color: var(--gray-600); margin-bottom: 2rem;">Junte-se ao sistema de estudos mais inteligente</p>
-                </div>
-                <form id="register-form">
-                    <div class="input-group">
-                        <label for="register-nome">Nome Completo</label>
-                        <input id="register-nome" type="text" placeholder="Digite seu nome completo" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="register-email">Email</label>
-                        <input id="register-email" type="email" placeholder="Digite seu email" required />
-                    </div>
-                    <div class="input-group">
-                        <label for="register-senha">Senha</label>
-                        <input id="register-senha" type="password" placeholder="Senha (mínimo 6 caracteres)" required />
-                    </div>
-                    <div class="input-group">
-                        <input id="register-confirmar-senha" type="password" placeholder="Confirmar senha" required />
-                    </div>
-                    <div id="register-error" class="error-msg" style="display:none"></div>
-                    <div class="button-group">
-                        <button type="submit" id="register-submit">Criar Conta</button>
-                        <button type="button" id="register-back">Voltar ao Login</button>
-                    </div>
-                </form>
-            </div>
-        `;
+  <div class="min-h-screen bg-gray-50">
+    <div class="mx-auto max-w-md px-4 py-10">
+      <div class="text-center mb-6">
+        <h1 class="text-3xl">🎯 Foco</h1>
+        <h2 class="text-2xl font-semibold text-gray-900">Criar Nova Conta</h2>
+        <p class="text-sm text-gray-600">Junte-se ao sistema de estudos mais inteligente</p>
+      </div>
+
+      <form id="register-form" class="space-y-4 rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
+        <div>
+          <label for="register-nome" class="mb-1 block text-sm font-medium text-gray-700">Nome Completo</label>
+          <input id="register-nome" type="text" required
+                 class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                 placeholder="Digite seu nome completo" />
+        </div>
+
+        <div>
+          <label for="register-email" class="mb-1 block text-sm font-medium text-gray-700">Email</label>
+          <input id="register-email" type="email" required
+                 class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                 placeholder="Digite seu email" />
+        </div>
+
+        <div>
+          <label for="register-senha" class="mb-1 block text-sm font-medium text-gray-700">Senha</label>
+          <input id="register-senha" type="password" required
+                 class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                 placeholder="Senha (mínimo 6 caracteres)" />
+        </div>
+
+        <div>
+          <label for="register-confirmar-senha" class="mb-1 block text-sm font-medium text-gray-700">Confirmar senha</label>
+          <input id="register-confirmar-senha" type="password" required
+                 class="block w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:border-indigo-500 focus:ring-indigo-500"
+                 placeholder="Repita a senha" />
+        </div>
+
+        <div id="register-error" class="hidden rounded-md p-3 text-sm"></div>
+
+        <div class="flex items-center justify-between gap-3">
+          <button type="submit" id="register-submit"
+                  class="inline-flex w-full items-center justify-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+            Criar Conta
+          </button>
+          <button type="button" id="register-back"
+                  class="inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            Voltar ao Login
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+`;
 
         const form = this.element.querySelector('#register-form') as HTMLFormElement;
         const nomeInput = this.element.querySelector('#register-nome') as HTMLInputElement;
@@ -73,7 +87,7 @@ export class RegisterView {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             this.clearError();
-            
+
             const nome = nomeInput.value.trim();
             const email = emailInput.value.trim();
             const senha = senhaInput.value.trim();

@@ -100,7 +100,7 @@ export class MainView {
         this.textoUtils = new TextoUtils(this.textoRepository, this.conversaRepository);
 
         // Inicializa o cliente de IA Gemini
-        const geminiApiKey = process.env.GEMINI_API_KEY || 'AIzaSyADIO67T9OCXAgFzoLMf7LC-cpmmYPQYL4';
+        const geminiApiKey = process.env.GEMINI_API_KEY!;
         this.geminiClient = new GeminiClient(geminiApiKey);
 
         // Inicializa as views e define os callbacks de navegação e operações
