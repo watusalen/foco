@@ -1,5 +1,11 @@
+/**
+ * Status possível para uma atividade.
+ */
 export type StatusAtividade = 'pendente' | 'em_andamento' | 'concluida';
 
+/**
+ * Atividade registrada no cronograma.
+ */
 export interface Atividade {
   id: string;
   cronograma_id: string;
@@ -10,6 +16,9 @@ export interface Atividade {
   status: StatusAtividade;
 }
 
+/**
+ * Dados necessários para criar uma nova atividade.
+ */
 export interface NovaAtividade {
   cronograma_id: string;
   titulo: string;

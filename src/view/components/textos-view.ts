@@ -12,7 +12,6 @@ export class TextosView {
 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
   <path d="M10.5 19.5L3 12l7.5-7.5M3 12h18"></path>
 </svg>`.trim(),
-    // varinha mágica para "Gerar com IA"
     wand: `
 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"
      stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">

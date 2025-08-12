@@ -1,16 +1,27 @@
 /**
  * QuizPlayView
- *
- * Execução de quiz com paleta violet, header consistente e UX polida
+ * 
+ * Responsável pela interface e interação para execução de um quiz.
+ * Apresenta perguntas, alternativas, progresso e resultado final.
+ * Usa paleta violet, header consistente e UX polida.
  */
 export class QuizPlayView {
+  /** Elemento principal da tela do quiz */
   public element: HTMLElement;
 
+  /** Callback acionado ao enviar resposta (id da questão + alternativa) */
   private onSubmitAnswer: (questaoId: string, resposta: 'A' | 'B' | 'C' | 'D') => void;
+
+  /** Callback acionado ao finalizar o quiz, enviando o score final */
   private onFinishQuiz: (score: number) => void;
+
+  /** ID da questão atual */
   private currentQuestionId: string = '';
+
+  /** Alternativa selecionada pelo usuário */
   private selectedAnswer: 'A' | 'B' | 'C' | 'D' | null = null;
 
+  /** Array com as questões do quiz */
   private questoes: Array<{
     id: string;
     enunciado: string;
@@ -19,10 +30,14 @@ export class QuizPlayView {
     alternativa_c: string;
     alternativa_d: string;
   }> = [];
+
+  /** Índice da questão atual no array */
   private currentQuestionIndex: number = 0;
+
+  /** Pontuação acumulada do usuário */
   private score: number = 0;
 
-  // Ícones
+  /** Ícones SVG utilizados na interface */
   private readonly icons = {
     back: `
 <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none"
@@ -31,6 +46,12 @@ export class QuizPlayView {
 </svg>`.trim(),
   };
 
+  /**
+   * Construtor da view, monta o HTML e configura eventos.
+   * @param onBack Função chamada ao clicar em voltar
+   * @param onSubmitAnswer Função chamada ao enviar uma resposta (id da questão, alternativa)
+   * @param onFinishQuiz Função chamada ao finalizar o quiz, com o score
+   */
   constructor(
     onBack: () => void,
     onSubmitAnswer: (questaoId: string, resposta: 'A' | 'B' | 'C' | 'D') => void,
@@ -38,6 +59,7 @@ export class QuizPlayView {
   ) {
     this.element = document.getElementById("quiz-play-screen")! as HTMLElement;
 
+    // Monta o layout HTML da tela de quiz
     this.element.innerHTML = `
   <div class="min-h-screen bg-gradient-to-b from-white to-violet-50/40">
     <div class="mx-auto max-w-4xl px-4 py-6">
@@ -99,20 +121,25 @@ export class QuizPlayView {
   </div>
 `;
 
-    // Listeners base
+    // Eventos de navegação voltar
     (this.element.querySelector('#quiz-back') as HTMLButtonElement).addEventListener('click', onBack);
     (this.element.querySelector('#back-to-quizzes') as HTMLButtonElement).addEventListener('click', onBack);
 
-    // Store callbacks
+    // Armazena callbacks para uso posterior
     this.onSubmitAnswer = onSubmitAnswer;
     this.onFinishQuiz = onFinishQuiz;
 
-    // Submit
+    // Evento do botão responder
     (this.element.querySelector('#submit-answer') as HTMLButtonElement)
       .addEventListener('click', () => this.handleSubmitAnswer());
   }
 
-  /** Inicia o quiz com as informações e primeira questão */
+  /**
+   * Inicializa o quiz com título e lista de questões.
+   * Reseta o estado visual e mostra a primeira questão.
+   * @param quiz Objeto com título do quiz
+   * @param questoes Lista de questões com alternativas
+   */
   public startQuiz(
     quiz: { titulo: string },
     questoes: Array<{
@@ -124,7 +151,7 @@ export class QuizPlayView {
       alternativa_d: string;
     }>
   ) {
-    // Reset de estado visual
+    // Reset visual
     const questionContainer = this.element.querySelector('#question-container') as HTMLElement;
     const resultContainer = this.element.querySelector('#quiz-result') as HTMLElement;
     questionContainer.classList.remove('hidden');
@@ -138,7 +165,10 @@ export class QuizPlayView {
     this.showCurrentQuestion();
   }
 
-  /** Mostra a questão atual */
+  /**
+   * Exibe a questão atual com enunciado, alternativas e progresso.
+   * Se o quiz terminou, exibe o resultado final.
+   */
   private showCurrentQuestion() {
     if (this.currentQuestionIndex >= this.questoes.length) {
       this.showFinalResult();
@@ -149,7 +179,7 @@ export class QuizPlayView {
     this.currentQuestionId = questao.id;
     this.selectedAnswer = null;
 
-    // Progresso
+    // Atualiza progresso visual
     const total = this.questoes.length;
     const now = Math.round(((this.currentQuestionIndex + 1) / total) * 100);
     const questionNumberEl = this.element.querySelector('#question-number') as HTMLElement;
@@ -183,34 +213,34 @@ export class QuizPlayView {
       }).join('')}
     `;
 
-    // Listeners das alternativas + highlight
+    // Configura listeners para seleção e highlight das alternativas
     const radios = alternativesContainer.querySelectorAll<HTMLInputElement>('input[type="radio"]');
     radios.forEach(radio => {
       radio.addEventListener('change', () => {
         this.selectedAnswer = radio.value as 'A' | 'B' | 'C' | 'D';
-        // highlight visual
+        // Remove destaque antigo
         alternativesContainer.querySelectorAll('.alternative').forEach(el => {
           el.classList.remove('ring-2','ring-violet-400','border-violet-300','bg-violet-50');
         });
+        // Destaca alternativa selecionada
         const label = radio.closest('.alternative') as HTMLElement;
         if (label) label.classList.add('ring-2','ring-violet-400','border-violet-300','bg-violet-50');
         this.updateSubmitButton();
       });
     });
 
-    // Botão “Responder/Finalizar”
     this.updateSubmitButton();
     this.updateSubmitCta();
   }
 
-  /** Atualiza o texto do botão (Finalizar na última questão) */
+  /** Atualiza o texto do botão enviar para "Finalizar" na última questão */
   private updateSubmitCta() {
     const submitBtn = this.element.querySelector('#submit-answer') as HTMLButtonElement;
     const isLast = this.currentQuestionIndex === this.questoes.length - 1;
     submitBtn.textContent = isLast ? 'Finalizar' : 'Responder';
   }
 
-  /** Habilita/desabilita o botão de envio */
+  /** Habilita ou desabilita o botão enviar com base na seleção */
   private updateSubmitButton() {
     const submitBtn = this.element.querySelector('#submit-answer') as HTMLButtonElement;
     const enabled = !!this.selectedAnswer;
@@ -220,17 +250,20 @@ export class QuizPlayView {
       : 'submit-btn inline-flex items-center justify-center rounded-md bg-gray-300 px-4 py-2 text-sm font-medium text-gray-700 cursor-not-allowed';
   }
 
-  /** Envia resposta e avança */
+  /** Envia a resposta selecionada e avança para a próxima questão */
   private handleSubmitAnswer() {
     if (!this.selectedAnswer || !this.currentQuestionId) return;
-    // salva resposta
+
     this.onSubmitAnswer(this.currentQuestionId, this.selectedAnswer);
-    // próxima
+
     this.currentQuestionIndex++;
     this.showCurrentQuestion();
   }
 
-  /** Mostra o resultado final */
+  /**
+   * Exibe o resultado final do quiz, com a pontuação do usuário.
+   * Aciona o callback onFinishQuiz com o score.
+   */
   private showFinalResult() {
     const questionContainer = this.element.querySelector('#question-container') as HTMLElement;
     const resultContainer = this.element.querySelector('#quiz-result') as HTMLElement;
@@ -249,7 +282,11 @@ export class QuizPlayView {
     this.onFinishQuiz(this.score);
   }
 
-  /** Atualiza o score quando a resposta é processada pelo controlador */
+  /**
+   * Atualiza a pontuação do usuário.
+   * Deve ser chamado pelo controlador quando a resposta for correta.
+   * @param correct Indica se a resposta foi correta
+   */
   public updateScore(correct: boolean) {
     if (correct) this.score++;
   }

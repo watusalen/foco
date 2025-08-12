@@ -1,5 +1,11 @@
+/**
+ * Alternativa correta de uma questão.
+ */
 export type AlternativaCorreta = 'A' | 'B' | 'C' | 'D';
 
+/**
+ * Questão cadastrada em um quiz.
+ */
 export interface Questao {
   id: string;
   quiz_id: string;
@@ -11,6 +17,9 @@ export interface Questao {
   correta: AlternativaCorreta;
 }
 
+/**
+ * Dados para criar uma nova questão.
+ */
 export interface NovaQuestao {
   quiz_id: string;
   enunciado: string;

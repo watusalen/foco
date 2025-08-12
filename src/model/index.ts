@@ -1,4 +1,6 @@
-// Exporta todas as entidades do modelo
+/**
+ * Exporta todas as entidades do modelo.
+ */
 export * from './Usuario';
 export * from './Cronograma';
 export * from './Atividade';

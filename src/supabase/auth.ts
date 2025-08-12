@@ -1,24 +1,30 @@
 import { supabase } from './client';
 import type { Usuario } from '../model';
 
+/** Representa um usuário autenticado */
 export interface AuthUser {
-  id: string;
-  email: string;
+  id: string;     // UUID do usuário
+  email: string;  // E-mail do usuário
 }
 
+/** Estrutura retornada pela inscrição em eventos de autenticação */
 export interface AuthSubscription {
   data: {
     subscription: {
-      unsubscribe: () => void;
+      unsubscribe: () => void; // Cancela a inscrição
     };
   };
 }
 
+/**
+ * Serviço de autenticação
+ * 
+ * Fornece métodos para login, cadastro, logout, 
+ * verificação de autenticação e observação de mudanças de estado.
+ */
 export class AuthService {
   
-  /**
-   * Faz login com email e senha
-   */
+  /** Faz login com e-mail e senha */
   async signIn(email: string, password: string) {
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
@@ -32,20 +38,15 @@ export class AuthService {
     return data;
   }
 
-  /**
-   * Cadastra novo usuário
-   */
+  /** Cadastra novo usuário e cria perfil na tabela `usuarios` */
   async signUp(email: string, password: string, nome: string) {
-    const { data, error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
+    const { data, error } = await supabase.auth.signUp({ email, password });
 
     if (error) {
       throw new Error(`Erro no cadastro: ${error.message}`);
     }
 
-    // Criar o perfil do usuário na tabela usuarios
+    // Cria perfil associado
     if (data.user) {
       const { error: profileError } = await supabase
         .from('usuarios')
@@ -63,49 +64,35 @@ export class AuthService {
     return data;
   }
 
-  /**
-   * Faz logout
-   */
+  /** Faz logout */
   async signOut() {
     const { error } = await supabase.auth.signOut();
-    
     if (error) {
       throw new Error(`Erro no logout: ${error.message}`);
     }
   }
 
-  /**
-   * Obtém o usuário atual
-   */
+  /** Retorna o usuário autenticado atual ou `null` */
   async getCurrentUser(): Promise<AuthUser | null> {
     const { data: { user } } = await supabase.auth.getUser();
-    
     if (!user || !user.email) return null;
 
-    return {
-      id: user.id,
-      email: user.email,
-    };
+    return { id: user.id, email: user.email };
   }
 
-  /**
-   * Verifica se o usuário está logado
-   */
+  /** Retorna `true` se o usuário está logado */
   async isAuthenticated(): Promise<boolean> {
-    const user = await this.getCurrentUser();
-    return user !== null;
+    return (await this.getCurrentUser()) !== null;
   }
 
   /**
-   * Observa mudanças no estado de autenticação
+   * Observa mudanças no estado de autenticação.
+   * Executa o callback sempre que o usuário logar ou deslogar.
    */
   onAuthStateChange(callback: (user: AuthUser | null) => void): AuthSubscription {
     return supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user && session.user.email) {
-        callback({
-          id: session.user.id,
-          email: session.user.email,
-        });
+        callback({ id: session.user.id, email: session.user.email });
       } else {
         callback(null);
       }
