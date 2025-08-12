@@ -46,6 +46,13 @@ type LogoutCallback = () => void;
  * @since 1.0.0
  * @author Matusalen C. Alves
  */
+
+export interface DashboardStats {
+  quizzes: number;
+  textos: number;
+  cronogramas: number;
+}
+
 export class DashboardView {
   /** Elemento DOM principal do dashboard */
   public element: HTMLElement;
@@ -241,7 +248,7 @@ export class DashboardView {
                 <div class="mt-2 text-2xl font-semibold text-gray-900 stat-number" data-stat="cronogramas">0</div>
               </div>
             </div>
-
+                    </section>
         <!-- Atividade recente -->
         <section class="recent-section">
           <h3 class="mb-3 inline-flex items-center gap-2 text-base font-semibold text-gray-900">
@@ -298,8 +305,6 @@ export class DashboardView {
   set('textos', stats.textos);
   set('cronogramas', stats.cronogramas);
 }
-
-
   /**
    * Atualiza a seção de atividades recentes
    * 

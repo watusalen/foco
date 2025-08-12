@@ -58,7 +58,7 @@ export class CronogramaDetailView {
 
   /**
    * Renderiza as informações e atividades do cronograma
-   * 
+   *
    * @param cronograma Objeto contendo as informações do cronograma e suas atividades
    */
   public showCronogramaDetails(cronograma: {
@@ -168,7 +168,7 @@ export class CronogramaDetailView {
       }).filter(Boolean).join('')
       : '<p class="no-activities text-sm text-gray-600">Nenhuma atividade encontrada para este cronograma.</p>';
 
-    // Monta conteúdo principal
+    // Monta conteúdo principal (1 coluna no mobile, 2 colunas a partir de md)
     contentEl.innerHTML = `
       <div class="cronograma-overview">
         <div class="cronograma-info rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
@@ -188,6 +188,7 @@ export class CronogramaDetailView {
           </div>
         </div>
       </div>
+
       <div class="atividades-section">
         <h3 class="mt-6 mb-3 flex items-center gap-2 text-base font-semibold text-gray-900">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
@@ -199,7 +200,7 @@ export class CronogramaDetailView {
           </svg>
           Atividades do Cronograma
         </h3>
-        <div class="atividades-list grid grid-cols-2 gap-4 max-w-4xl mx-auto w-full">
+        <div class="atividades-list grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto w-full">
           ${atividadesHtml}
         </div>
       </div>
