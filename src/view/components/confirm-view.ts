@@ -27,15 +27,15 @@ export class ConfirmView {
         <button id="confirm-no"
           class="confirm-btn secondary inline-flex items-center rounded-md border border-gray-300 bg-white
                  px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2
-                 focus:ring-indigo-600 focus:ring-offset-2">
+                 focus:ring-gray-600 focus:ring-offset-2">
           Cancelar
         </button>
-        <button id="confirm-yes"
-          class="confirm-btn primary inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm
-                 font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2
-                 focus:ring-indigo-600 focus:ring-offset-2 disabled:opacity-60">
-          Confirmar
-        </button>
+<button id="confirm-yes"
+  class="confirm-btn inline-flex items-center rounded-md bg-rose-600 px-4 py-2 text-sm
+         font-medium text-white hover:bg-rose-700 focus:outline-none focus:ring-2
+         focus:ring-rose-600 focus:ring-offset-2 disabled:opacity-60">
+  Confirmar
+</button>
       </div>
     </div>
   </div>
