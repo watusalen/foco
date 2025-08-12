@@ -9,20 +9,20 @@
  * - #register-screen: container principal da tela de registro
  */
 export class RegisterView {
-    /** Elemento principal da tela de registro */
-    public element: HTMLElement;
+  /** Elemento principal da tela de registro */
+  public element: HTMLElement;
 
-    /**
-     * @param onRegister Função chamada ao registrar, recebe nome, email e senha
-     * @param onBackToLogin Função chamada ao voltar para login
-     */
-    constructor(
-        onRegister: (nome: string, email: string, senha: string) => void,
-        onBackToLogin: () => void
-    ) {
-        this.element = document.getElementById("register-screen")! as HTMLElement;
+  /**
+   * @param onRegister Função chamada ao registrar, recebe nome, email e senha
+   * @param onBackToLogin Função chamada ao voltar para login
+   */
+  constructor(
+    onRegister: (nome: string, email: string, senha: string) => void,
+    onBackToLogin: () => void
+  ) {
+    this.element = document.getElementById("register-screen")! as HTMLElement;
 
-        this.element.innerHTML = `
+    this.element.innerHTML = `
   <div class="min-h-screen bg-gray-50">
     <div class="mx-auto max-w-md px-4 py-10">
       <div class="text-center mb-6">
@@ -77,109 +77,111 @@ export class RegisterView {
   </div>
 `;
 
-        const form = this.element.querySelector('#register-form') as HTMLFormElement;
-        const nomeInput = this.element.querySelector('#register-nome') as HTMLInputElement;
-        const emailInput = this.element.querySelector('#register-email') as HTMLInputElement;
-        const senhaInput = this.element.querySelector('#register-senha') as HTMLInputElement;
-        const confirmarSenhaInput = this.element.querySelector('#register-confirmar-senha') as HTMLInputElement;
-        const backBtn = this.element.querySelector('#register-back') as HTMLButtonElement;
+    const form = this.element.querySelector('#register-form') as HTMLFormElement;
+    const nomeInput = this.element.querySelector('#register-nome') as HTMLInputElement;
+    const emailInput = this.element.querySelector('#register-email') as HTMLInputElement;
+    const senhaInput = this.element.querySelector('#register-senha') as HTMLInputElement;
+    const confirmarSenhaInput = this.element.querySelector('#register-confirmar-senha') as HTMLInputElement;
+    const backBtn = this.element.querySelector('#register-back') as HTMLButtonElement;
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            this.clearError();
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      this.clearError();
 
-            const nome = nomeInput.value.trim();
-            const email = emailInput.value.trim();
-            const senha = senhaInput.value.trim();
-            const confirmarSenha = confirmarSenhaInput.value.trim();
+      const nome = nomeInput.value.trim();
+      const email = emailInput.value.trim();
+      const senha = senhaInput.value.trim();
+      const confirmarSenha = confirmarSenhaInput.value.trim();
 
-            // Validações
-            if (!nome || !email || !senha || !confirmarSenha) {
-                this.showError("Todos os campos são obrigatórios.");
-                return;
-            }
+      // Validações
+      if (!nome || !email || !senha || !confirmarSenha) {
+        this.showError("Todos os campos são obrigatórios.");
+        return;
+      }
 
-            if (senha.length < 6) {
-                this.showError("Senha deve ter pelo menos 6 caracteres.");
-                return;
-            }
+      if (senha.length < 6) {
+        this.showError("Senha deve ter pelo menos 6 caracteres.");
+        return;
+      }
 
-            if (senha !== confirmarSenha) {
-                this.showError("Senhas não coincidem.");
-                return;
-            }
+      if (senha !== confirmarSenha) {
+        this.showError("Senhas não coincidem.");
+        return;
+      }
 
-            if (!this.isValidEmail(email)) {
-                this.showError("Email inválido.");
-                return;
-            }
+      if (!this.isValidEmail(email)) {
+        this.showError("Email inválido.");
+        return;
+      }
 
-            onRegister(nome, email, senha);
-        });
+      onRegister(nome, email, senha);
+    });
 
-        backBtn.addEventListener('click', onBackToLogin);
-    }
+    backBtn.addEventListener('click', onBackToLogin);
+  }
 
-    /**
-     * Valida formato do email
-     */
-    private isValidEmail(email: string): boolean {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-    }
+  /**
+   * Valida formato do email
+   */
+  private isValidEmail(email: string): boolean {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  }
 
-    /**
-     * Mostra mensagem de erro
-     */
-    public showError(message: string): void {
-        const errorEl = this.element.querySelector('#register-error') as HTMLElement;
-        errorEl.textContent = message;
-        errorEl.style.display = 'block';
-    }
+  /**
+   * Mostra mensagem de erro
+   */
+  public showError(message: string): void {
+    const errorEl = this.element.querySelector('#register-error') as HTMLElement;
+    errorEl.textContent = message;
+    errorEl.classList.remove('hidden');
+    errorEl.style.color = '#dc2626'; // vermelho padrão para erro
+  }
 
-    /**
-     * Limpa mensagem de erro
-     */
-    public clearError(): void {
-        const errorEl = this.element.querySelector('#register-error') as HTMLElement;
-        errorEl.style.display = 'none';
-    }
+  /**
+   * Limpa mensagem de erro
+   */
+  public clearError(): void {
+    const errorEl = this.element.querySelector('#register-error') as HTMLElement;
+    errorEl.textContent = '';
+    errorEl.classList.add('hidden');
+  }
 
-    /**
-     * Mostra estado de loading
-     */
-    public showLoading(message: string): void {
-        const submitBtn = this.element.querySelector('#register-submit') as HTMLButtonElement;
-        submitBtn.disabled = true;
-        submitBtn.textContent = message;
-    }
+  /**
+   * Mostra estado de loading
+   */
+  public showLoading(message: string): void {
+    const submitBtn = this.element.querySelector('#register-submit') as HTMLButtonElement;
+    submitBtn.disabled = true;
+    submitBtn.textContent = message;
+  }
 
-    /**
-     * Remove estado de loading
-     */
-    public hideLoading(): void {
-        const submitBtn = this.element.querySelector('#register-submit') as HTMLButtonElement;
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Criar Conta';
-    }
+  /**
+   * Remove estado de loading
+   */
+  public hideLoading(): void {
+    const submitBtn = this.element.querySelector('#register-submit') as HTMLButtonElement;
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Criar Conta';
+  }
 
-    /**
-     * Limpa o formulário
-     */
-    public clear(): void {
-        const form = this.element.querySelector('#register-form') as HTMLFormElement;
-        form.reset();
-        this.clearError();
-        this.hideLoading();
-    }
+  /**
+   * Limpa o formulário
+   */
+  public clear(): void {
+    const form = this.element.querySelector('#register-form') as HTMLFormElement;
+    form.reset();
+    this.clearError();
+    this.hideLoading();
+  }
 
-    /**
-     * Mostra mensagem de sucesso
-     */
-    public showSuccess(message: string): void {
-        const errorEl = this.element.querySelector('#register-error') as HTMLElement;
-        errorEl.textContent = message;
-        errorEl.style.display = 'block';
-        errorEl.style.color = '#28a745';
-    }
+  /**
+   * Mostra mensagem de sucesso
+   */
+  public showSuccess(message: string): void {
+    const errorEl = this.element.querySelector('#register-error') as HTMLElement;
+    errorEl.textContent = message;
+    errorEl.classList.remove('hidden');
+    errorEl.style.color = '#28a745'; // verde para sucesso
+  }
 }

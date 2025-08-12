@@ -229,14 +229,14 @@ export class GeradorView {
     const outputEl = this.element.querySelector('#gerador-output') as HTMLElement;
 
     outputEl.innerHTML = `
-      <div class="rounded-lg border border-violet-200 bg-violet-50 p-5 shadow-sm">
-        <h4 class="mb-1 inline-flex items-center gap-2 text-base font-semibold text-violet-900">
+      <div class="rounded-lg border border-green-200 bg-green-50 p-5 shadow-sm">
+        <h4 class="mb-1 inline-flex items-center gap-2 text-base font-semibold text-green-900">
           ${this.icons.check}<span>Quiz gerado com sucesso</span>
         </h4>
         <p class="text-sm text-gray-700"><strong>Título:</strong> ${quizTitle}</p>
         <p class="text-sm text-gray-700">O quiz foi criado e está disponível na seção de Quizzes.</p>
         <button id="go-to-quizzes"
-          class="mt-4 inline-flex items-center gap-2 rounded-md bg-violet-600 px-4 py-2 text-sm font-medium text-white hover:bg-violet-700">
+          class="mt-4 inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
           Ir para Quizzes
         </button>
       </div>
@@ -254,14 +254,14 @@ export class GeradorView {
     const outputEl = this.element.querySelector('#gerador-output') as HTMLElement;
 
     outputEl.innerHTML = `
-      <div class="rounded-lg border border-amber-200 bg-amber-50 p-5 shadow-sm">
-        <h4 class="mb-1 inline-flex items-center gap-2 text-base font-semibold text-amber-900">
+      <div class="rounded-lg border border-green-200 bg-green-50 p-5 shadow-sm">
+        <h4 class="mb-1 inline-flex items-center gap-2 text-base font-semibold text-green-900">
           ${this.icons.check}<span>Texto gerado com sucesso</span>
         </h4>
         <p class="text-sm text-gray-700"><strong>Título:</strong> ${textoTitle}</p>
         <p class="text-sm text-gray-700">O texto foi criado e está disponível na seção de Textos.</p>
         <button id="go-to-textos"
-          class="mt-4 inline-flex items-center gap-2 rounded-md bg-amber-600 px-4 py-2 text-sm font-medium text-white hover:bg-amber-700">
+          class="mt-4 inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
           Ver Texto
         </button>
       </div>
@@ -279,15 +279,15 @@ export class GeradorView {
     const outputEl = this.element.querySelector('#gerador-output') as HTMLElement;
 
     outputEl.innerHTML = `
-      <div class="rounded-lg border border-sky-200 bg-sky-50 p-5 shadow-sm">
-        <h4 class="mb-1 inline-flex items-center gap-2 text-base font-semibold text-sky-900">
+      <div class="rounded-lg border border-green-200 bg-green-50 p-5 shadow-sm">
+        <h4 class="mb-1 inline-flex items-center gap-2 text-base font-semibold text-green-900">
           ${this.icons.check}<span>Cronograma gerado com sucesso</span>
         </h4>
         <p class="text-sm text-gray-700"><strong>Título:</strong> ${cronogramaTitle}</p>
         <p class="text-sm text-gray-700"><strong>Atividades criadas:</strong> ${atividadesCount}</p>
         <p class="text-sm text-gray-700">O cronograma completo foi criado e está disponível na seção de Cronogramas.</p>
         <button id="go-to-cronogramas"
-          class="mt-4 inline-flex items-center gap-2 rounded-md bg-sky-600 px-4 py-2 text-sm font-medium text-white hover:bg-sky-700">
+          class="mt-4 inline-flex items-center gap-2 rounded-md bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700">
           Ver Cronograma
         </button>
       </div>

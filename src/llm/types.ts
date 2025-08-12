@@ -1,8 +1,8 @@
 /**
- * Tipos para o agente inteligente LLM
+ * Tipos usados pelo agente inteligente LLM.
  */
 
-// Input do usuário - a meta principal
+/** Meta principal informada pelo usuário. */
 export interface MetaUsuario {
   objetivo: string;
   tempoDisponivel: string; // ex: "2 horas por dia"
@@ -10,7 +10,7 @@ export interface MetaUsuario {
   nivel?: 'iniciante' | 'intermediario' | 'avancado';
 }
 
-// Quiz gerado pelo agente
+/** Quiz gerado pelo agente. */
 export interface QuizGerado {
   titulo: string;
   tema: string;
@@ -18,6 +18,7 @@ export interface QuizGerado {
   questoes: QuestaoGerada[];
 }
 
+/** Questão de um quiz. */
 export interface QuestaoGerada {
   enunciado: string;
   alternativa_a: string;
@@ -27,7 +28,7 @@ export interface QuestaoGerada {
   correta: 'A' | 'B' | 'C' | 'D';
 }
 
-// Cronograma gerado pelo agente
+/** Cronograma gerado pelo agente. */
 export interface CronogramaGerado {
   titulo: string;
   objetivo: string;
@@ -35,6 +36,7 @@ export interface CronogramaGerado {
   atividades: AtividadeGerada[];
 }
 
+/** Atividade dentro de um cronograma. */
 export interface AtividadeGerada {
   titulo: string;
   descricao: string;
@@ -43,7 +45,7 @@ export interface AtividadeGerada {
   prioridade: 'baixa' | 'media' | 'alta';
 }
 
-// Meta específica gerada pelo agente
+/** Meta específica gerada pelo agente. */
 export interface MetaGerada {
   titulo: string;
   descricao: string;
@@ -52,7 +54,7 @@ export interface MetaGerada {
   prazoFinal: string;
 }
 
-// Resposta do agente com tudo gerado
+/** Resposta completa do agente, com metas, cronograma e quizzes. */
 export interface PlanoCompleto {
   meta: MetaGerada;
   cronograma: CronogramaGerado;
