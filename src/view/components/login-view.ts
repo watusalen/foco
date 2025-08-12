@@ -22,7 +22,7 @@ export class LoginView {
         this.element.innerHTML = `
   <div class="min-h-screen bg-gray-50">
     <div class="mx-auto max-w-md px-4 py-10">
-      <h2 class="mb-6 text-center text-2xl font-semibold text-gray-900">FOCO —Login</h2>
+      <h2 class="mb-6 text-center text-2xl font-semibold text-gray-900">FOCO — Login</h2>
 
       <form id="login-form" class="rounded-xl border border-gray-200 bg-white p-6 shadow-sm space-y-4">
         <div>

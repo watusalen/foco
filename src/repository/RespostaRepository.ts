@@ -47,7 +47,7 @@ export class RespostaRepository extends SupabaseBaseRepository<Resposta, NovaRes
   }
 
   /**
-   * Buscar respostas de um usuário em um quiz específico
+   * Buscar respostas de um usuário em um quiz específico (apenas a mais recente por questão)
    */
   async findByUserInQuiz(userId: string, quizId: string): Promise<Array<Resposta & { questao: any }>> {
     const { data, error } = await this.supabase
@@ -62,13 +62,23 @@ export class RespostaRepository extends SupabaseBaseRepository<Resposta, NovaRes
         )
       `)
       .eq('usuario_id', userId)
-      .eq('questoes.quiz_id', quizId);
+      .eq('questoes.quiz_id', quizId)
+      .order('respondido_em', { ascending: false });
 
     if (error) {
       throw new Error(`Erro ao buscar respostas do usuário no quiz: ${error.message}`);
     }
 
-    return data as Array<Resposta & { questao: any }>;
+    // Filtra apenas a resposta mais recente por questão para evitar duplicatas
+    const respostasUnicas = new Map();
+    (data as Array<Resposta & { questao: any }>).forEach(resposta => {
+      const questaoId = resposta.questao_id;
+      if (!respostasUnicas.has(questaoId)) {
+        respostasUnicas.set(questaoId, resposta);
+      }
+    });
+
+    return Array.from(respostasUnicas.values());
   }
 
   /**
@@ -92,12 +102,36 @@ export class RespostaRepository extends SupabaseBaseRepository<Resposta, NovaRes
 
     const correta = questao?.correta === respostaUsuario;
 
-    return this.create({
-      usuario_id: userId,
-      questao_id: questaoId,
-      resposta_dada: respostaUsuario,
-      correta
-    } as NovaResposta);
+    // Verificar se já existe uma resposta para esta questão do usuário
+    const respostaExistente = await this.findByUserAndQuestao(userId, questaoId);
+
+    if (respostaExistente) {
+      // Atualizar resposta existente
+      const { data, error } = await this.supabase
+        .from(this.tableName)
+        .update({
+          resposta_dada: respostaUsuario,
+          correta,
+          respondido_em: new Date().toISOString()
+        })
+        .eq('id', respostaExistente.id)
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(`Erro ao atualizar resposta: ${error.message}`);
+      }
+
+      return data as Resposta;
+    } else {
+      // Criar nova resposta
+      return this.create({
+        usuario_id: userId,
+        questao_id: questaoId,
+        resposta_dada: respostaUsuario,
+        correta
+      } as NovaResposta);
+    }
   }
 
   /**
@@ -187,27 +221,30 @@ export class RespostaRepository extends SupabaseBaseRepository<Resposta, NovaRes
     completed: boolean;
     totalQuestoes: number;
   }> {
-    const respostasQuiz = await this.findByUserInQuiz(userId, quizId);
-    const acertos = respostasQuiz.filter(r => r.correta).length;
-    const total = respostasQuiz.length;
-    const erros = total - acertos;
-    const percentualAcerto = total > 0 ? Math.round((acertos / total) * 100) : 0;
-
-    // Buscar total de questões do quiz
+    // Buscar total de questões do quiz primeiro
     const { count: totalQuestoes } = await this.supabase
       .from('questoes')
       .select('*', { count: 'exact', head: true })
       .eq('quiz_id', quizId);
 
-    const completed = total === (totalQuestoes || 0);
+    const respostasQuiz = await this.findByUserInQuiz(userId, quizId);
+    const acertos = respostasQuiz.filter(r => r.correta).length;
+    const totalRespostas = respostasQuiz.length;
+    const erros = totalRespostas - acertos;
+    
+    // Calcula percentual baseado no total de questões do quiz, não nas respostas dadas
+    const totalQuestoesCount = totalQuestoes || 0;
+    const percentualAcerto = totalQuestoesCount > 0 ? Math.round((acertos / totalQuestoesCount) * 100) : 0;
+    
+    const completed = totalRespostas === totalQuestoesCount;
 
     return {
-      totalRespostas: total,
+      totalRespostas,
       acertos,
       erros,
       percentualAcerto,
       completed,
-      totalQuestoes: totalQuestoes || 0
+      totalQuestoes: totalQuestoesCount
     };
   }
 

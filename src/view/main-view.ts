@@ -406,28 +406,14 @@ export class MainView {
     }
 
     /**
-     * Carrega e exibe a tela de metas
+     * Carrega e exibe a tela de metas (funcionalidade desabilitada no MVP)
      */
     private async loadMetas(): Promise<void> {
         this.closeAllDialogs(); // Fecha diálogos ao navegar
         this.router.show("metas-screen");
 
-        try {
-            if (!this.state.userId) {
-                console.error("Usuário não está logado");
-                return;
-            }
-
-            // Carrega metas reais do banco de dados
-            const metas = await this.metaRepository.findByUserId(this.state.userId);
-
-            this.metasView.updateMetasList(metas);
-
-        } catch (error) {
-            console.error("Erro ao carregar metas:", error);
-            // Em caso de erro, mostra lista vazia
-            this.metasView.updateMetasList([]);
-        }
+        // Metas está desabilitada no MVP - apenas mostra a tela de "em desenvolvimento"
+        this.metasView.updateMetasList();
     }
 
     /**
@@ -446,24 +432,27 @@ export class MainView {
             // Carrega quizzes reais do banco de dados com suas questões
             const quizzesComQuestoes = await this.quizRepository.findByUserIdWithQuestoes(this.state.userId);
 
-            // Mapeia os dados para o formato esperado pela view incluindo porcentagem
+            // Mapeia os dados para o formato esperado pela view incluindo acertos
             const quizzes = await Promise.all(quizzesComQuestoes.map(async quiz => {
                 const totalQuestoes = quiz.questoes ? quiz.questoes.length : 0;
-                let ultimaPorcentagem = null;
+                let acertos = null;
+                let totalRespostas = null;
 
                 // Busca respostas do usuário para este quiz específico
                 if (totalQuestoes > 0) {
                     try {
-                        const respostasDoQuiz = await this.respostaRepository.findByUserInQuiz(this.state.userId!, quiz.id);
-
-                        // Se o usuário respondeu todas as questões, calcula porcentagem
-                        if (respostasDoQuiz.length === totalQuestoes) {
-                            const acertos = respostasDoQuiz.filter(r => r.correta).length;
-                            ultimaPorcentagem = Math.round((acertos / totalQuestoes) * 100);
+                        // Usa getUserQuizStats que já tem a lógica correta
+                        const stats = await this.respostaRepository.getUserQuizStats(this.state.userId!, quiz.id);
+                        
+                        // Se o usuário tem respostas, guarda os acertos
+                        if (stats.totalRespostas > 0) {
+                            acertos = stats.acertos;
+                            totalRespostas = stats.totalRespostas;
+                            console.log(`📊 Quiz "${quiz.titulo}": ${stats.acertos}/${stats.totalQuestoes} acertos`);
                         }
                     } catch (error) {
-                        console.log("Erro ao buscar respostas do quiz:", error);
-                        // Continua sem porcentagem em caso de erro
+                        console.log("Erro ao buscar estatísticas do quiz:", error);
+                        // Continua sem dados em caso de erro
                     }
                 }
 
@@ -471,7 +460,8 @@ export class MainView {
                     id: quiz.id,
                     titulo: quiz.titulo,
                     questoes: totalQuestoes,
-                    ultimaPorcentagem: ultimaPorcentagem
+                    acertos: acertos,
+                    totalRespostas: totalRespostas
                 };
             }));
 
@@ -487,61 +477,27 @@ export class MainView {
     }
 
     /**
-     * Manipula criação de nova meta
+     * Manipula criação de nova meta (desabilitado no MVP)
      */
     private async onCreateMeta(titulo: string, descricao: string, dataLimite: string): Promise<void> {
-        try {
-            if (!this.state.userId) {
-                console.error("Usuário não está logado");
-                return;
-            }
-
-            // Cria meta real no banco de dados
-            const novaMeta = await this.metaRepository.create({
-                usuario_id: this.state.userId,
-                titulo: titulo,
-                descricao: descricao,
-                data_limite: dataLimite
-            });
-
-            console.log("Nova meta criada:", novaMeta);
-
-            // Recarrega a lista de metas
-            await this.loadMetas();
-
-        } catch (error) {
-            console.error("Erro ao criar meta:", error);
-            this.metasView.setFormError("Erro ao criar meta. Tente novamente.");
-        }
-    }    /**
-     * Manipula edição de meta
-     */
-    private onEditMeta(id: string): void {
-        // Implementa edição de meta
-        console.log("Editar meta:", id);
-        this.metasView.setFormError("Funcionalidade de edição em desenvolvimento.");
+        console.log("Criação de meta desabilitada no MVP:", { titulo, descricao, dataLimite });
+        // Funcionalidade desabilitada no MVP
     }
 
     /**
-     * Manipula exclusão de meta
+     * Manipula edição de meta (desabilitado no MVP)
+     */
+    private onEditMeta(id: string): void {
+        console.log("Edição de meta desabilitada no MVP:", id);
+        // Funcionalidade desabilitada no MVP
+    }
+
+    /**
+     * Manipula exclusão de meta (desabilitado no MVP)
      */
     private onDeleteMeta(id: string): void {
-        this.confirmView.show(
-            "Tem certeza que deseja excluir esta meta?",
-            async () => {
-                try {
-                    // Exclui meta real do banco
-                    await this.metaRepository.deleteById(id);
-                    console.log("Meta excluída:", id);
-
-                    // Recarrega a lista de metas
-                    await this.loadMetas();
-
-                } catch (error) {
-                    console.error("Erro ao excluir meta:", error);
-                }
-            }
-        );
+        console.log("Exclusão de meta desabilitada no MVP:", id);
+        // Funcionalidade desabilitada no MVP
     }
 
     /**
@@ -710,7 +666,7 @@ export class MainView {
                     return;
                 }
 
-                console.log("🤖 Gerando quiz com IA real para:", prompt);
+                console.log("  Gerando quiz com IA real para:", prompt);
 
                 // Chama a IA REAL do Gemini para gerar quiz
                 const quizGerado = await this.geminiClient.gerarQuiz(prompt, 5, 'medio');
@@ -787,7 +743,7 @@ export class MainView {
      */
     private async generateTextoWithIA(prompt: string): Promise<void> {
         try {
-            console.log("🤖 Gerando texto com IA real para:", prompt);
+            console.log("  Gerando texto com IA real para:", prompt);
 
             // Monta prompt específico para geração de texto educativo
             const promptCompleto = `
@@ -840,7 +796,7 @@ Responda em formato JSON:
      */
     private async generateCronogramaWithIA(prompt: string): Promise<void> {
         try {
-            console.log("🤖 Gerando cronograma com IA real para:", prompt);
+            console.log("  Gerando cronograma com IA real para:", prompt);
 
             // Chama a IA REAL do Gemini para gerar cronograma
             const cronogramaGerado = await this.geminiClient.gerarCronograma(
