@@ -201,7 +201,7 @@ export class CronogramaDetailView {
       </svg>
       Atividades do Cronograma
     </h3>
-    <div class="atividades-list grid grid-cols-2 gap-4 max-w-4xl mx-auto w-full">
+    <div class="atividades-list grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto w-full">
       ${atividadesHtml}
     </div>
   </div>

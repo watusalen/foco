@@ -2,6 +2,13 @@
  * DashboardView
  * Tela principal com header consistente, navegação em cards e estatísticas.
  */
+
+export interface DashboardStats {
+  quizzes: number;
+  textos: number;
+  cronogramas: number;
+}
+
 export class DashboardView {
   public element: HTMLElement;
 
@@ -133,40 +140,42 @@ export class DashboardView {
       <main class="space-y-8">
         <!-- Estatísticas com faixa colorida -->
         <section class="stats-section">
-          <h3 class="mb-3 inline-flex items-center gap-2 text-base font-semibold text-gray-900">
-            <span class="text-indigo-600">${this.icons.chart}</span><span>Estatísticas</span>
-          </h3>
+            <h3 class="mb-3 inline-flex items-center gap-2 text-base font-semibold text-gray-900">
+              <span class="text-indigo-600">${this.icons.chart}</span><span>Estatísticas</span>
+            </h3>
 
-          <div id="dashboard-stats" class="grid gap-4 sm:grid-cols-3">
-            <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-              <div class="h-1 w-full rounded-t-xl bg-emerald-500"></div>
-              <div class="mt-3 flex items-center justify-between">
-                <span class="text-sm text-gray-600">Metas Ativas</span>
-                <span class="rounded-md bg-emerald-50 p-2 text-emerald-700">${this.icons.target}</span>
+            <div id="dashboard-stats" class="grid gap-4 sm:grid-cols-3">
+              <!-- Quizzes -->
+              <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div class="h-1 w-full rounded-t-xl bg-violet-500"></div>
+                <div class="mt-3 flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Quizzes</span>
+                  <span class="rounded-md bg-violet-50 p-2 text-violet-700">${this.icons.brain}</span>
+                </div>
+                <div class="mt-2 text-2xl font-semibold text-gray-900 stat-number" data-stat="quizzes">0</div>
               </div>
-              <div class="mt-2 text-2xl font-semibold text-gray-900 stat-number">0</div>
-            </div>
 
-            <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-              <div class="h-1 w-full rounded-t-xl bg-sky-500"></div>
-              <div class="mt-3 flex items-center justify-between">
-                <span class="text-sm text-gray-600">Horas Estudadas</span>
-                <span class="rounded-md bg-sky-50 p-2 text-sky-700">${this.icons.clock}</span>
+              <!-- Textos -->
+              <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div class="h-1 w-full rounded-t-xl bg-amber-500"></div>
+                <div class="mt-3 flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Textos</span>
+                  <span class="rounded-md bg-amber-50 p-2 text-amber-700">${this.icons.document}</span>
+                </div>
+                <div class="mt-2 text-2xl font-semibold text-gray-900 stat-number" data-stat="textos">0</div>
               </div>
-              <div class="mt-2 text-2xl font-semibold text-gray-900 stat-number">0</div>
-            </div>
 
-            <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
-              <div class="h-1 w-full rounded-t-xl bg-violet-500"></div>
-              <div class="mt-3 flex items-center justify-between">
-                <span class="text-sm text-gray-600">Quizzes Feitos</span>
-                <span class="rounded-md bg-violet-50 p-2 text-violet-700">${this.icons.trophy}</span>
+              <!-- Cronogramas -->
+              <div class="rounded-xl border border-gray-200 bg-white p-4 shadow-sm">
+                <div class="h-1 w-full rounded-t-xl bg-sky-500"></div>
+                <div class="mt-3 flex items-center justify-between">
+                  <span class="text-sm text-gray-600">Cronogramas</span>
+                  <span class="rounded-md bg-sky-50 p-2 text-sky-700">${this.icons.calendar}</span>
+                </div>
+                <div class="mt-2 text-2xl font-semibold text-gray-900 stat-number" data-stat="cronogramas">0</div>
               </div>
-              <div class="mt-2 text-2xl font-semibold text-gray-900 stat-number">0</div>
             </div>
-          </div>
         </section>
-
         <!-- Atividade recente -->
         <section class="recent-section">
           <h3 class="mb-3 inline-flex items-center gap-2 text-base font-semibold text-gray-900">
@@ -195,11 +204,14 @@ export class DashboardView {
       .addEventListener('click', onLogout);
   }
 
-  public updateStats(stats: { metas: number; horas: number; quizzes: number }) {
-    const statCards = this.element.querySelectorAll('.stat-number');
-    if (statCards[0]) statCards[0].textContent = String(stats.metas);
-    if (statCards[1]) statCards[1].textContent = String(stats.horas);
-    if (statCards[2]) statCards[2].textContent = String(stats.quizzes);
+  public updateStats(stats: Partial<DashboardStats>) {
+    const set = (key: keyof DashboardStats, value?: number) => {
+      const el = this.element.querySelector<HTMLElement>(`.stat-number[data-stat="${key}"]`);
+      if (el) el.textContent = String(value ?? 0);
+    };
+    set('quizzes', stats.quizzes);
+    set('textos', stats.textos);
+    set('cronogramas', stats.cronogramas);
   }
 
   public updateRecent(content: string) {
