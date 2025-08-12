@@ -1,159 +1,207 @@
-# 🎯 Foco - Sistema Inteligente de Estudos
+# 🎯 FOCO - Sistema Inteligente de Estudos
 
-Sistema desenvolvido como principal atividade da disciplina de **Engenharia de Software II**, durante o terceiro módulo de Análise e Desenvolvimento de Sistemas no Instituto Federal de Educação, Ciência e Tecnologia do Piauí.
+> Sistema desenvolvido como principal atividade da disciplina de **Engenharia de Software II** e **Banco de Dados II** do Instituto Federal de Educação, Ciência e Tecnologia do Piauí (IFPI), durante o terceiro módulo de Análise e Desenvolvimento de Sistemas.
 
-## 🚀 Sobre o Projeto
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)](https://supabase.com/)
+[![Gemini](https://img.shields.io/badge/Google_Gemini-8E75B2?style=flat&logo=google&logoColor=white)](https://ai.google.dev/)
 
-O **Foco** é uma aplicação web moderna que utiliza inteligência artificial para organizar cronogramas de estudo, criar quizzes personalizados e gerar conteúdo educativo. O sistema foi desenvolvido com foco na experiência do usuário e na produtividade nos estudos.
+Um **agente inteligente** para organizar cronogramas de estudo, lembretes e quizzes personalizados, utilizando **Inteligência Artificial** para criar conteúdo educativo adaptado às necessidades do usuário.
 
-## ✨ Funcionalidades
+## 🌟 Principais Funcionalidades
 
-### 📊 Dashboard Inteligente
-- Visão geral de estatísticas de estudo
-- Acesso rápido a todas as funcionalidades
-- Atividades recentes e progressos
+### 🤖 **Geração Inteligente com IA**
+- **Quizzes Personalizados**: Questões automáticas sobre qualquer tema
+- **Cronogramas Adaptativos**: Planejamento estruturado baseado em objetivos
+- **Textos Educativos**: Resumos e explicações didáticas
+- **Conversas Contínuas**: Chat interativo sobre conteúdo gerado
 
-### 🎯 Gerenciamento de Metas
-- Criação e acompanhamento de metas de estudo
-- Sistema de progresso visual
-- Organização por prioridades
+### 📊 **Sistema de Quizzes Avançado**
+- Formato intuitivo "acertos/total" em vez de percentuais complexos
+- Prevenção inteligente de respostas duplicadas
+- Reset automático de estado visual entre sessões
+- Tracking completo de progresso por usuário
 
-### 📝 Cronogramas de Estudo
-- **Criação** de cronogramas personalizados
-- **Edição** e **exclusão** de cronogramas existentes
-- Status automático (futuro, ativo, finalizado)
-- Validação de datas e campos obrigatórios
-- Contador de dias restantes
+### 📅 **Gestão de Cronogramas**
+- Criação manual ou automática via IA
+- Visualização detalhada de atividades
+- Acompanhamento de progresso por período
+- Interface organizada por datas
 
-### 🧠 Quizzes Interativos
-- Biblioteca de quizzes organizados
-- Sistema de pontuação e feedback
-- Criação de quizzes personalizados
+### 📚 **Biblioteca de Conteúdo**
+- Sistema de textos e resumos gerados por IA
+- Conversas contínuas para aprofundamento
+- Sistema de favoritos para conteúdo importante
+- Renderização inteligente de markdown
 
-### 🤖 Gerador de Conteúdo IA
-- Geração de **quizzes** automatizados
-- Criação de **textos educativos**
-- Interface intuitiva com prompts personalizados
+### 📈 **Dashboard Analítico**
+- Visão geral de progresso em tempo real
+- Estatísticas detalhadas de desempenho
+- Navegação intuitiva em cards coloridos
+- Interface responsiva e moderna
 
-## 🛠️ Tecnologias
+## 🏗️ Arquitetura Técnica
 
-### Frontend
-- **TypeScript** - Linguagem principal
-- **HTML5** - Estrutura semântica
-- **CSS3** - Estilização responsiva
-- **Parcel** - Bundler e dev server
+### **Stack Principal**
+```
+Frontend:  TypeScript + Tailwind CSS + Parcel
+Backend:   Supabase (PostgreSQL + Auth)
+IA:        Google Gemini API (gemini-1.5-flash)
+Testes:    Jest + TypeScript
+Deploy:    Vercel
+```
 
-### Arquitetura
-- **SPA (Single Page Application)** - Navegação fluida
-- **Component-based** - Estrutura modular
-- **Event-driven** - Comunicação por callbacks
-- **Router Pattern** - Gerenciamento de telas
-
-### Integrações Futuras
-- **Supabase** - Banco de dados e autenticação
-- **Google Gemini** - IA para geração de conteúdo
-- **Vercel** - Deploy e hosting
-
-## 🏗️ Estrutura do Projeto
-
+### **Estrutura do Projeto**
 ```
 src/
-├── view/
-│   ├── main-view.ts           # Coordenador principal
-│   ├── components/            # Componentes de tela
-│   │   ├── login-view.ts      # Autenticação
-│   │   ├── dashboard-view.ts  # Dashboard principal
-│   │   ├── metas-view.ts      # Gerenciamento de metas
-│   │   ├── quizzes-view.ts    # Sistema de quizzes
-│   │   ├── cronogramas-view.ts # Cronogramas (CRUD completo)
-│   │   ├── gerador-view.ts    # Geração de conteúdo IA
-│   │   └── confirm-view.ts    # Modal de confirmação
-│   └── utils/
-│       └── screen-router.ts   # Roteador de telas
-├── crud/                      # Operações de dados
-├── model/                     # Modelos de dados
-├── repository/                # Camada de persistência
-└── supabase/                  # Configurações do banco
+├── model/           # Modelos de dados (Usuario, Quiz, Cronograma, etc.)
+├── repository/      # Camada de acesso a dados (CRUD + Supabase)
+├── view/            # Interface do usuário (Views + Componentes)
+│   ├── components/  # Componentes de tela individuais
+│   └── utils/       # Utilitários de interface
+├── llm/             # Cliente Gemini AI + tipos
+├── supabase/        # Configuração e autenticação
+└── index.ts         # Ponto de entrada da aplicação
 ```
 
-## 🚦 Como Executar
+### **Padrões Arquiteturais**
+- **Repository Pattern**: Abstração da camada de dados
+- **Single Page Application (SPA)**: Navegação fluida entre telas
+- **Component-Based**: Componentes reutilizáveis e modulares
 
-### Pré-requisitos
+## 🎨 Design System
+
+### **Paleta Temática**
+Cada seção possui sua identidade visual única:
+
+- 🟢 **Metas**: `emerald` - Foco e objetivos
+- 🟣 **Quizzes**: `violet` - Conhecimento e avaliação  
+- 🔵 **Cronogramas**: `sky` - Planejamento e organização
+- 🟡 **Textos**: `amber` - Conteúdo e aprendizado
+- 🟪 **Gerador**: `fuchsia` - Criatividade e IA
+
+## 🗄️ Modelo de Dados
+
+### **Entidades Principais**
+```sql
+usuarios          # Autenticação e perfis
+├── cronogramas   # Planejamentos de estudo
+│   └── atividades    # Tarefas específicas
+├── metas         # Objetivos de aprendizado
+├── textos        # Conteúdo gerado por IA
+│   └── conversas     # Chat contínuo
+└── quizzes       # Avaliações interativas
+    ├── questoes      # Perguntas individuais
+    └── respostas     # Histórico de respostas
+```
+
+### **Recursos Avançados**
+- **Relacionamentos Complexos**: Foreign keys + joins otimizados
+- **Validação de Dados**: Constraints e triggers automáticos
+- **Auditoria Temporal**: Timestamps em todas as operações
+- **Índices Performáticos**: Consultas otimizadas para escala
+
+## 🧪 Qualidade e Testes
+
+### **Cobertura de Testes**
+```bash
+# Testes unitários
+npm run test
+
+# Modo watch para desenvolvimento
+npm run test:watch
+
+# Relatório de cobertura
+npm run test:coverage
+
+# Pipeline CI/CD
+npm run test:ci
+```
+
+### **Tipos de Teste**
+- **Unitários**: Lógica de negócio e repositories
+- **Integração**: Fluxos completos com Supabase
+- **Configuração**: Jest + TypeScript + ES Modules
+
+## 🚀 Configuração e Deploy
+
+### **Pré-requisitos**
 - Node.js 18+
-- npm ou yarn
+- Conta Supabase
+- API Key do Google Gemini
 
-### Instalação
+### **Instalação Local**
 ```bash
 # Clone o repositório
 git clone https://github.com/watusalen/foco.git
-
-# Entre no diretório
 cd foco
 
-# Instale as dependências
+# Instale dependências
 npm install
 
-# Execute o servidor de desenvolvimento
+# Configure variáveis de ambiente
+cp .env.example .env
+# Adicione suas chaves no arquivo .env
+
+# Execute em desenvolvimento
 npm run dev
+
+# Build para produção
+npm run build
 ```
 
-A aplicação estará disponível em `http://localhost:1234`
-
-### Scripts Disponíveis
-```bash
-npm run dev       # Servidor de desenvolvimento
-npm run build     # Build de produção
-npm run preview   # Preview do build
-npm run test      # Executar testes
-npm run clean     # Limpar cache e build
+### **Variáveis de Ambiente**
+```env
+SUPABASE_URL=sua_url_supabase
+SUPABASE_ANON_KEY=sua_chave_anonima
+GEMINI_API_KEY=sua_chave_gemini
 ```
 
-## 🎨 Interface
+### **Deploy Automático**
+O projeto está configurado para deploy automático na **Vercel**:
+- Push na branch `main` → Deploy em produção
+- Pull requests → Preview deploys automáticos
 
-O sistema possui uma interface moderna e intuitiva com:
-- **Design responsivo** para desktop e mobile
-- **Navegação fluida** entre telas
-- **Feedback visual** para todas as ações
-- **Validação em tempo real** de formulários
-- **Tema claro** com cores suaves e profissionais
+## 🎯 MVP vs Versão Completa
 
-## 📱 Funcionalidades Detalhadas
+### **Funcionalidades MVP (Atual)**
+✅ Sistema completo de Quizzes com IA  
+✅ Geração de Textos e Cronogramas  
+✅ Dashboard com estatísticas  
+✅ Autenticação e perfis de usuário  
+✅ Interface responsiva moderna  
 
-### Cronogramas de Estudo
-- ✅ **Criar** novos cronogramas com validação
-- ✅ **Editar** cronogramas existentes
-- ✅ **Excluir** com confirmação
-- ✅ **Status automático** baseado em datas
-- ✅ **Contador de dias** restantes
-- ✅ **Validação** de campos e datas
+### **Roadmap Futuro**
+🔄 **Metas**: Sistema completo de objetivos e tracking  
+🔄 **Gamificação**: Pontuação, níveis e conquistas  
+🔄 **Colaboração**: Compartilhamento de cronogramas  
+🔄 **Mobile App**: Versão nativa iOS/Android  
+🔄 **Relatórios**: Analytics avançados de desempenho  
 
-### Gerador de Conteúdo
-- ✅ **Quiz personalizado** baseado em prompts
-- ✅ **Texto educativo** gerado por IA
-- ✅ **Interface intuitiva** com feedback visual
-- ✅ **Redirecionamento** automático para quizzes
+## 👥 Contribuição
 
-## 🔧 Próximas Implementações
+### **Como Contribuir**
+1. Fork o projeto
+2. Crie sua feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-- [ ] Integração com banco de dados Supabase
-- [ ] Sistema de autenticação real
-- [ ] Geração de conteúdo com Google Gemini
-- [ ] Sistema de notificações
-- [ ] Modo escuro/claro
-- [ ] Exportação de cronogramas
-- [ ] Estatísticas avançadas
-
-## 👨‍💻 Autor
-
-**Matusalen C. Alves**
-- Instituto Federal do Piauí (IFPI)
-- Curso: Análise e Desenvolvimento de Sistemas
-- Disciplina: Engenharia de Software II
+### **Padrões de Desenvolvimento**
+- **Commits**: Conventional Commits (`feat:`, `fix:`, `docs:`)
+- **Code Style**: TypeScript + ESLint
+- **Testes**: Cobertura mínima de 80%
+- **Documentação**: JSDoc em funções públicas
 
 ## 📄 Licença
 
-Este projeto está sob a licença ISC. Veja o arquivo [LICENSE](LICENSE) para detalhes.
+Este projeto está sob a licença **MIT**. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+- **IFPI** - Instituto Federal de Educação, Ciência e Tecnologia do Piauí
+- **Disciplinas**: Engenharia de Software II, Banco de Dados II
 
----
+<div align="center">
 
-*Desenvolvido com 💚 no IFPI*
+*Sistema FOCO - Transformando estudos com Inteligência Artificial*
+
+</div>
