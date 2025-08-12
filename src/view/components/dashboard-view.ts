@@ -1,16 +1,4 @@
 /**
- * Interface para as estatísticas do dashboard
- */
-interface DashboardStats {
-  /** Número de quizzes completados */
-  quizzes: number;
-  /** Número de textos gerados */
-  textos: number;
-  /** Número de cronogramas existentes */
-  cronogramas: number;
-}
-
-/**
  * Tipo para os callbacks de navegação
  */
 type NavigationCallback = (screen: string) => void;
